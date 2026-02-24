@@ -1,0 +1,20 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Single-Cell Analysis"
+  chapters:
+    - index.qmd
+    - 01-preface-and-setup.qmd
+    - 02-data-structure-and-qc-metrics.qmd
+    - 03-normalization-and-feature-selection.qmd
+    - 04-dimensionality-reduction-and-clustering.qmd
+    - 05-marker-genes-and-annotation.qmd
+    - 06-from-clusters-to-calibrated-biological-claims.qmd
+
+format:
+  html:
+    toc: true
+    number-sections: false
+    css: assets/css/cdi.css

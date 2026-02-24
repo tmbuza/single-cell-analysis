@@ -1,0 +1,264 @@
+# Lesson 5: Marker Genes and Annotation Discipline
+
+:::cdi-message
+- **ID:** SC-L05
+- **Type:** Differential Signal
+- **Audience:** Public
+- **Theme:** Identifying marker genes and separating clustering from biological identity
+:::
+
+## From Clusters to Markers
+
+Clustering groups cells based on expression similarity.
+
+Marker analysis asks:
+
+Which genes distinguish one cluster from the others?
+
+Clusters are algorithmic.
+Markers provide biological evidence.
+
+Marker detection is still a statistical model, not proof of identity.
+
+---
+
+## Load Data and Recreate Objects
+
+```{r load-and-prepare}
+#| message: false
+#| warning: false
+
+source("scripts/R/cdi-plot-theme.R")
+
+library(ggplot2)
+library(dplyr)
+library(readr)
+
+# Read counts as numeric matrix (avoid character columns)
+counts_df <- read.csv("data/demo-counts.csv", check.names = FALSE)
+rownames(counts_df) <- counts_df[, 1]
+counts_df <- counts_df[, -1, drop = FALSE]
+counts <- as.matrix(counts_df)
+storage.mode(counts) <- "numeric"
+
+metadata <- read.csv("data/demo-metadata.csv", stringsAsFactors = FALSE)
+
+# Normalize + log transform
+library_size <- colSums(counts)
+norm_counts <- sweep(counts, 2, library_size, "/") * 10000
+log_counts <- log1p(norm_counts)
+
+# Variable genes
+gene_vars <- apply(log_counts, 1, var)
+var_order <- order(gene_vars, decreasing = TRUE)
+variable_genes <- rownames(log_counts)[var_order[1:200]]
+
+# PCA for clustering
+mat <- t(log_counts[variable_genes, ])
+pca <- prcomp(mat, center = TRUE, scale. = TRUE)
+
+pc_df <- data.frame(
+  PC1 = pca$x[, 1],
+  PC2 = pca$x[, 2]
+)
+
+set.seed(123)
+kmeans_res <- kmeans(pc_df[, c("PC1", "PC2")], centers = 3)
+clusters <- as.factor(kmeans_res$cluster)
+table(clusters)
+```
+
+---
+
+## Simple Marker Detection (Cluster 1 vs Others)
+
+For teaching, we use a per-gene two-sample t-test on log-normalized expression.
+
+In real analyses, you should use models designed for single-cell data and account for confounding, library size, and zero inflation.
+
+```{r marker-test}
+#| message: false
+#| warning: false
+
+cluster_id <- "1"
+
+group1 <- which(clusters == cluster_id)
+group2 <- which(clusters != cluster_id)
+
+marker_results <- data.frame(
+  gene = rownames(log_counts),
+  logFC = NA_real_,
+  pvalue = NA_real_
+)
+
+for (i in seq_len(nrow(log_counts))) {
+  g1 <- as.numeric(log_counts[i, group1])
+  g2 <- as.numeric(log_counts[i, group2])
+
+  # Effect size (mean difference)
+  marker_results$logFC[i] <- mean(g1, na.rm = TRUE) - mean(g2, na.rm = TRUE)
+
+  # Some genes can be nearly constant; t.test may warn. We treat failures as NA.
+  tt <- tryCatch(
+    suppressWarnings(t.test(g1, g2)),
+    error = function(e) NULL
+  )
+
+  marker_results$pvalue[i] <- if (is.null(tt)) NA_real_ else tt$p.value
+}
+
+marker_results$padj <- p.adjust(marker_results$pvalue, method = "BH")
+
+# Define "significant" markers for visualization
+marker_results$significant <- !is.na(marker_results$padj) & marker_results$padj < 0.05
+```
+
+---
+
+## Volcano Plot
+
+```{r volcano-plot}
+#| message: false
+#| warning: false
+
+volcano_df <- marker_results %>%
+  mutate(neglog10_padj = -log10(padj))
+
+sig_cutoff <- -log10(0.05)
+
+ggplot(volcano_df, aes(x = logFC, y = neglog10_padj)) +
+  geom_point(aes(color = significant), alpha = 0.75) +
+  scale_color_manual(values = c("FALSE" = "grey70", "TRUE" = "#036281")) +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  geom_hline(yintercept = sig_cutoff, linetype = "dashed") +
+  labs(
+    title = "Marker gene volcano plot (Cluster 1)",
+    subtitle = "Significant genes highlighted after multiple testing correction",
+    x = "Mean difference in log expression (Cluster 1 minus others)",
+    y = "-log10(adjusted p-value)"
+  ) +
+  cdi_theme()
+```
+
+### Interpretation
+
+This volcano plot shows three regimes:
+
+1. **Central cloud near logFC = 0**  
+   Genes with minimal difference between clusters. These form the null background.
+
+2. **Right tail (positive logFC, high significance)**  
+   Genes strongly higher in Cluster 1. Large effect sizes align with strong evidence.
+
+3. **Left tail (negative logFC)**  
+   Genes depleted in Cluster 1 relative to others.
+
+What is striking here is not only statistical significance.
+
+It is structural coherence.
+
+The most significant genes are also those with large effect sizes.
+That alignment suggests Cluster 1 is genuinely distinct in expression space.
+
+However, this does not yet prove biological identity.
+It confirms expression differentiation.
+
+---
+
+## Statistical Strength Does Not Equal Biological Identity
+
+This plot confirms:
+
+- Cluster 1 is transcriptionally distinct
+- The separation is not subtle
+- The signal survives multiple testing correction
+
+But this does not tell us:
+
+- Whether this cluster represents a known cell type
+- Whether it reflects activation state
+- Whether it reflects stress
+- Whether it is a QC artifact
+
+Remember from Lesson 4:
+
+One cluster aligned with high percent_mt.
+
+If this volcano plot corresponds to that cluster, we may be detecting stress-response genes.
+
+Strong signal does not guarantee meaningful biology.
+
+It guarantees difference.
+
+---
+
+## Top Marker Table
+
+```{r top-markers}
+#| message: false
+#| warning: false
+
+marker_results %>%
+  arrange(padj) %>%
+  select(gene, logFC, pvalue, padj) %>%
+  head(10)
+```
+
+Interpretation:
+
+These genes show the strongest statistical separation under this simple test.
+
+Biological annotation requires:
+
+- Known gene function and specificity
+- Consistency across datasets or references
+- Plausibility given the experimental context
+
+---
+
+## Critical Distinction
+
+Clustering answers:
+
+Which cells group together?
+
+Marker analysis answers:
+
+Which genes differentiate those groups?
+
+Annotation answers:
+
+What biological identity best explains those genes?
+
+These are three separate steps.
+
+---
+
+## Annotation Is a Hypothesis
+
+Even strong markers:
+
+- May reflect activation state rather than cell type
+- May be influenced by QC structure
+- May reflect stress responses
+
+Annotation should be framed as:
+
+"Cluster 1 is consistent with X-like cells based on its marker profile."
+
+Not:
+
+"Cluster 1 is definitively X."
+
+---
+
+## What This Lesson Established
+
+You now understand:
+
+- How to compute simple marker statistics without type issues
+- How to interpret volcano plots using both effect size and evidence
+- Why strong signal does not automatically imply cell identity
+- Why annotation is inference, not proof
+
+Next, we translate clusters and markers into calibrated biological claims.

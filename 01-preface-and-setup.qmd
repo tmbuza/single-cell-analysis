@@ -1,0 +1,189 @@
+# Lesson 1: Preface and Setup
+
+:::cdi-message
+- **ID:** SC-L01
+- **Type:** Gateway + Setup
+- **Audience:** Public
+- **Theme:** What single-cell analysis is, how this guide is structured, and how to run it
+:::
+
+## What This Guide Is
+
+Single-cell RNA-seq analysis is often described as a sequence of steps:
+
+QC → normalization → PCA or UMAP → clustering → markers → annotation
+
+Most confusion does not come from running those steps.
+It comes from interpreting what they mean and what they do not mean.
+
+This free guide is designed to build disciplined reasoning.
+
+You will learn to:
+
+- Understand the data objects (counts and metadata)
+- Apply QC with explicit thresholds and tradeoffs
+- Interpret embeddings and clusters carefully
+- Treat marker-based labels as hypotheses, not conclusions
+- Translate results into calibrated biological claims
+
+## What This Guide Is Not
+
+This guide is not:
+
+- A benchmark of tools
+- A promise that clustering equals cell types
+- A replacement for replication and validation
+
+It is a structured foundation that makes downstream choices easier to defend.
+
+---
+
+## The Reasoning Chain
+
+We follow a reasoning chain that mirrors how interpretation should happen in practice:
+
+Data structure → QC metrics → normalization choices → structure (PCA or UMAP) → clustering → marker evidence → calibrated claim
+
+Each lesson adds one layer.
+Later layers do not override earlier ones.
+
+---
+
+## Required Software
+
+This free track is R-centric.
+
+You need:
+
+- R (recent version)
+- Quarto
+- A few R packages for plotting and basic manipulation
+
+If you are using RStudio, both Quarto rendering and R execution work well.
+
+---
+
+## Project Structure
+
+Key folders in this repository:
+
+- `index.qmd`: cover page only
+- `01-*.qmd` to `06-*.qmd`: lesson chapters
+- `scripts/R/`: helper scripts (global plot theme and demo data generator)
+- `data/`: small demo datasets created locally
+- `docs/`: rendered site output (Quarto book)
+
+The build is configured to output into `docs/`.
+
+---
+
+## Global CDI Plot Theme
+
+This guide uses a global plotting theme so visuals stay consistent across domains.
+
+The theme lives here:
+
+- `scripts/R/cdi-plot-theme.R`
+
+You will source it at the top of lessons that generate plots.
+
+```{r source-plot-theme}
+#| message: false
+#| warning: false
+
+source("scripts/R/cdi-plot-theme.R")
+```
+
+---
+
+## Install Packages
+
+Install packages once.
+
+```{r install-packages}
+#| eval: false
+
+install.packages(c("ggplot2", "dplyr", "tidyr", "readr"))
+```
+
+Then load them in lessons when needed.
+
+```{r load-packages}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+```
+
+---
+
+## Generate the Demo Data
+
+The free track uses small simulated data so the workflow is reproducible and fast.
+
+Run the generator script once from the project root.
+
+```{r generate-demo-data}
+#| eval: false
+
+source("scripts/R/cdi-single-cell-simulate-data.R")
+```
+
+This will create:
+
+- `data/demo-counts.csv`
+- `data/demo-metadata.csv`
+
+If those files already exist, you can keep them.
+Regenerating is fine as long as you accept that random simulation changes the numbers.
+
+---
+
+## Render the Book
+
+From the project root, render with Quarto:
+
+```bash
+quarto render
+```
+
+If you want to render a single chapter during editing:
+
+```bash
+quarto render 01-preface-and-setup.qmd
+```
+
+---
+
+## How to Use This Free Track
+
+A practical way to move through the guide:
+
+1. Read the concept sections
+2. Run the code
+3. Compare your output to the interpretation notes
+4. Keep a short log of decisions (QC thresholds, normalization method, clustering resolution)
+
+This makes your results easier to explain and easier to reproduce.
+
+---
+
+## Interpretation Discipline
+
+Single-cell analysis is vulnerable to over-interpretation because:
+
+- Cells are not independent biological replicates
+- Clusters are algorithmic groupings, not ground truth
+- Marker genes can be shared across states
+- Batch effects can look like biology
+
+This guide will repeatedly separate:
+
+- What the analysis shows
+- What the analysis suggests
+- What the analysis cannot prove
+
+That separation is the core skill.

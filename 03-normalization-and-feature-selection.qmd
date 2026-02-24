@@ -1,0 +1,11 @@
+# Lesson 3: Normalization and Feature Selection
+
+:::cdi-message
+- **ID:** SC-L03
+- **Type:** Lesson
+- **Audience:** Public
+- **Theme:** Normalization, variable genes, scaling
+:::
+
+Content coming soon.
+

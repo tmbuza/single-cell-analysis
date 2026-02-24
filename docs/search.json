@@ -1,0 +1,482 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Single-Cell Analysis",
+    "section": "",
+    "text": "Free Guide · Updated Feb 2026",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>index.html</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html",
+    "href": "01-preface-and-setup.html",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "",
+    "text": "What This Guide Is\nSingle-cell RNA-seq analysis is often described as a sequence of steps:\nQC → normalization → PCA or UMAP → clustering → markers → annotation\nMost confusion does not come from running those steps. It comes from interpreting what they mean and what they do not mean.\nThis free guide is designed to build disciplined reasoning.\nYou will learn to:",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#what-this-guide-is",
+    "href": "01-preface-and-setup.html#what-this-guide-is",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "",
+    "text": "Understand the data objects (counts and metadata)\nApply QC with explicit thresholds and tradeoffs\nInterpret embeddings and clusters carefully\nTreat marker-based labels as hypotheses, not conclusions\nTranslate results into calibrated biological claims",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#what-this-guide-is-not",
+    "href": "01-preface-and-setup.html#what-this-guide-is-not",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "What This Guide Is Not",
+    "text": "What This Guide Is Not\nThis guide is not:\n\nA benchmark of tools\nA promise that clustering equals cell types\nA replacement for replication and validation\n\nIt is a structured foundation that makes downstream choices easier to defend.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#the-reasoning-chain",
+    "href": "01-preface-and-setup.html#the-reasoning-chain",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "The Reasoning Chain",
+    "text": "The Reasoning Chain\nWe follow a reasoning chain that mirrors how interpretation should happen in practice:\nData structure → QC metrics → normalization choices → structure (PCA or UMAP) → clustering → marker evidence → calibrated claim\nEach lesson adds one layer. Later layers do not override earlier ones.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#required-software",
+    "href": "01-preface-and-setup.html#required-software",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Required Software",
+    "text": "Required Software\nThis free track is R-centric.\nYou need:\n\nR (recent version)\nQuarto\nA few R packages for plotting and basic manipulation\n\nIf you are using RStudio, both Quarto rendering and R execution work well.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#project-structure",
+    "href": "01-preface-and-setup.html#project-structure",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Project Structure",
+    "text": "Project Structure\nKey folders in this repository:\n\nindex.qmd: cover page only\n01-*.qmd to 06-*.qmd: lesson chapters\nscripts/R/: helper scripts (global plot theme and demo data generator)\ndata/: small demo datasets created locally\ndocs/: rendered site output (Quarto book)\n\nThe build is configured to output into docs/.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#global-cdi-plot-theme",
+    "href": "01-preface-and-setup.html#global-cdi-plot-theme",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Global CDI Plot Theme",
+    "text": "Global CDI Plot Theme\nThis guide uses a global plotting theme so visuals stay consistent across domains.\nThe theme lives here:\n\nscripts/R/cdi-plot-theme.R\n\nYou will source it at the top of lessons that generate plots.\n\nsource(\"scripts/R/cdi-plot-theme.R\")",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#install-packages",
+    "href": "01-preface-and-setup.html#install-packages",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Install Packages",
+    "text": "Install Packages\nInstall packages once.\n\ninstall.packages(c(\"ggplot2\", \"dplyr\", \"tidyr\", \"readr\"))\n\nThen load them in lessons when needed.\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(readr)",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#generate-the-demo-data",
+    "href": "01-preface-and-setup.html#generate-the-demo-data",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Generate the Demo Data",
+    "text": "Generate the Demo Data\nThe free track uses small simulated data so the workflow is reproducible and fast.\nRun the generator script once from the project root.\n\nsource(\"scripts/R/cdi-single-cell-simulate-data.R\")\n\nThis will create:\n\ndata/demo-counts.csv\ndata/demo-metadata.csv\n\nIf those files already exist, you can keep them. Regenerating is fine as long as you accept that random simulation changes the numbers.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#render-the-book",
+    "href": "01-preface-and-setup.html#render-the-book",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Render the Book",
+    "text": "Render the Book\nFrom the project root, render with Quarto:\nquarto render\nIf you want to render a single chapter during editing:\nquarto render 01-preface-and-setup.qmd",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#how-to-use-this-free-track",
+    "href": "01-preface-and-setup.html#how-to-use-this-free-track",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "How to Use This Free Track",
+    "text": "How to Use This Free Track\nA practical way to move through the guide:\n\nRead the concept sections\nRun the code\nCompare your output to the interpretation notes\nKeep a short log of decisions (QC thresholds, normalization method, clustering resolution)\n\nThis makes your results easier to explain and easier to reproduce.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#interpretation-discipline",
+    "href": "01-preface-and-setup.html#interpretation-discipline",
+    "title": "Lesson 1: Preface and Setup",
+    "section": "Interpretation Discipline",
+    "text": "Interpretation Discipline\nSingle-cell analysis is vulnerable to over-interpretation because:\n\nCells are not independent biological replicates\nClusters are algorithmic groupings, not ground truth\nMarker genes can be shared across states\nBatch effects can look like biology\n\nThis guide will repeatedly separate:\n\nWhat the analysis shows\nWhat the analysis suggests\nWhat the analysis cannot prove\n\nThat separation is the core skill.",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Lesson 1: Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html",
+    "href": "02-data-structure-and-qc-metrics.html",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "",
+    "text": "Why Structure Comes First\nSingle-cell analysis does not begin with UMAP.\nIt begins with understanding:\nIf structure is misunderstood, every downstream result becomes fragile.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#why-structure-comes-first",
+    "href": "02-data-structure-and-qc-metrics.html#why-structure-comes-first",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "",
+    "text": "What rows represent (genes)\nWhat columns represent (cells)\nHow metadata aligns with the count matrix\nWhat QC metrics measure",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#load-required-libraries",
+    "href": "02-data-structure-and-qc-metrics.html#load-required-libraries",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Load Required Libraries",
+    "text": "Load Required Libraries\n\nsource(\"scripts/R/cdi-plot-theme.R\")\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#load-demo-data",
+    "href": "02-data-structure-and-qc-metrics.html#load-demo-data",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Load Demo Data",
+    "text": "Load Demo Data\nMake sure you have already generated the demo data:\nsource(\"scripts/R/cdi-single-cell-simulate-data.R\")\nNow load the files.\n\ncounts &lt;- read.csv(\"data/demo-counts.csv\", row.names = 1)\nmetadata &lt;- read.csv(\"data/demo-metadata.csv\", stringsAsFactors = FALSE)\n\ndim(counts)\n\n[1] 500 300\n\ndim(metadata)\n\n[1] 300   6",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#inspect-the-counts-matrix",
+    "href": "02-data-structure-and-qc-metrics.html#inspect-the-counts-matrix",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Inspect the Counts Matrix",
+    "text": "Inspect the Counts Matrix\n\ncounts[1:5, 1:5]\n\n         Cell1 Cell2 Cell3 Cell4 Cell5\nMT-Gene1     4     0     0     8     0\nMT-Gene2     7     0     1     6     0\nMT-Gene3     6     0     0     5     0\nMT-Gene4     8     0     2     1     1\nMT-Gene5     7     0     2     2     1\n\n\nInterpretation:\n\nRows are genes.\nColumns are cells.\nValues are raw counts.\nCounts are not normalized.\nCounts are not comparable across cells yet.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#inspect-metadata",
+    "href": "02-data-structure-and-qc-metrics.html#inspect-metadata",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Inspect Metadata",
+    "text": "Inspect Metadata\n\nhead(metadata)\n\n  cell_id cell_type_truth  batch nCount_RNA nFeature_RNA percent_mt\n1   Cell1           Type1 Batch1        615          319  18.536585\n2   Cell2           Type2 Batch1        623          328   2.568218\n3   Cell3           Type3 Batch1        628          335   2.547771\n4   Cell4           Type1 Batch1        627          335  14.832536\n5   Cell5           Type2 Batch1        613          314   2.283850\n6   Cell6           Type3 Batch1        621          338   2.737520\n\nstr(metadata)\n\n'data.frame':   300 obs. of  6 variables:\n $ cell_id        : chr  \"Cell1\" \"Cell2\" \"Cell3\" \"Cell4\" ...\n $ cell_type_truth: chr  \"Type1\" \"Type2\" \"Type3\" \"Type1\" ...\n $ batch          : chr  \"Batch1\" \"Batch1\" \"Batch1\" \"Batch1\" ...\n $ nCount_RNA     : int  615 623 628 627 613 621 622 629 598 600 ...\n $ nFeature_RNA   : int  319 328 335 335 314 338 325 324 321 331 ...\n $ percent_mt     : num  18.54 2.57 2.55 14.83 2.28 ...\n\n\nKey QC metrics:\n\nnCount_RNA: total counts per cell\nnFeature_RNA: number of detected genes\npercent_mt: proportion of mitochondrial counts",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#alignment-check",
+    "href": "02-data-structure-and-qc-metrics.html#alignment-check",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Alignment Check",
+    "text": "Alignment Check\nCounts columns must match metadata cell IDs.\n\nall(colnames(counts) == metadata$cell_id)\n\n[1] TRUE\n\n\nIf FALSE, alignment must be fixed before proceeding.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#distribution-of-total-counts-ncount_rna",
+    "href": "02-data-structure-and-qc-metrics.html#distribution-of-total-counts-ncount_rna",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Distribution of Total Counts (nCount_RNA)",
+    "text": "Distribution of Total Counts (nCount_RNA)\n\nggplot(metadata, aes(x = nCount_RNA)) +\n  cdi_geom_histogram(bins = 40, colored = TRUE) +\n  cdi_scale_histogram_fill() +\n  labs(\n    title = \"Distribution of total counts per cell\",\n    subtitle = \"Cells with extremely low counts may be poor quality\",\n    x = \"nCount_RNA\",\n    y = \"Number of cells\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\nImproved Interpretation:\nMost cells fall within a relatively narrow range of total counts.\nThere is no cluster of extremely low-count cells, which reduces the likelihood of empty droplets.\nA modest right tail exists. This could represent: - Cells with genuinely higher RNA content - Potential doublets (two cells captured together)\nAt this stage, there is no justification to remove cells purely based on nCount_RNA.\nQC thresholds should not be applied simply because they are common in tutorials.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#distribution-of-detected-genes-nfeature_rna",
+    "href": "02-data-structure-and-qc-metrics.html#distribution-of-detected-genes-nfeature_rna",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Distribution of Detected Genes (nFeature_RNA)",
+    "text": "Distribution of Detected Genes (nFeature_RNA)\n\nggplot(metadata, aes(x = nFeature_RNA)) +\n  cdi_geom_histogram(bins = 40, colored = TRUE) +\n  cdi_scale_histogram_fill() +\n  labs(\n    title = \"Distribution of detected genes per cell\",\n    subtitle = \"Low-feature cells are often low quality\",\n    x = \"nFeature_RNA\",\n    y = \"Number of cells\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\nImproved Interpretation:\nThe distribution is narrow and largely unimodal.\nThere is no obvious subpopulation of extremely low-feature cells.\nThis suggests that technical dropout is not dominating the dataset.\nHigher-feature cells could reflect: - Larger or more transcriptionally active cells - Doublets - Or specific biological states\nAgain, no immediate filtering decision is justified.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#mitochondrial-percentage-percent_mt",
+    "href": "02-data-structure-and-qc-metrics.html#mitochondrial-percentage-percent_mt",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "Mitochondrial Percentage (percent_mt)",
+    "text": "Mitochondrial Percentage (percent_mt)\n\nggplot(metadata, aes(x = percent_mt)) +\n  cdi_geom_histogram(bins = 40, colored = TRUE) +\n  cdi_scale_histogram_fill() +\n  labs(\n    title = \"Mitochondrial percentage per cell\",\n    subtitle = \"High mitochondrial proportion may indicate stressed or dying cells\",\n    x = \"percent_mt\",\n    y = \"Number of cells\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\nImproved Interpretation:\nThe mitochondrial percentage shows clear bimodality.\nOne group of cells has low mitochondrial content (~2–4%), while another shows substantially higher values (~14–18%).\nThis pattern suggests: - Either a stressed cell subpopulation - Or a batch-driven difference\nBefore filtering, we must check:\n\nIs high percent_mt enriched in one batch?\nDoes removing these cells remove a biological cluster?\nAre these cells coherent in downstream PCA space?\n\nBlindly applying a “5% mitochondrial cutoff” would eliminate an entire subpopulation.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#qc-decisions-should-be-tested",
+    "href": "02-data-structure-and-qc-metrics.html#qc-decisions-should-be-tested",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "QC Decisions Should Be Tested",
+    "text": "QC Decisions Should Be Tested\nQC filtering is a hypothesis.\nBefore applying thresholds, test whether:\n\nHigh percent_mt cells cluster together\nThey are enriched in a specific batch\nThey align with a specific cell type\n\nIf filtering removes a coherent biological signal, it may be inappropriate.\nQC is not about cleaning data until it looks nice.\nIt is about controlling technical noise while preserving biological structure.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#what-this-lesson-established",
+    "href": "02-data-structure-and-qc-metrics.html#what-this-lesson-established",
+    "title": "Lesson 2: Data Structure and QC Metrics",
+    "section": "What This Lesson Established",
+    "text": "What This Lesson Established\nYou now understand:\n\nThe structure of a single-cell count matrix\nThe role of metadata\nCore QC metrics\nWhy QC thresholds require reasoning, not memorization\n\nNext, we move to normalization and feature selection.",
+    "crumbs": [
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Lesson 2: Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "03-normalization-and-feature-selection.html",
+    "href": "03-normalization-and-feature-selection.html",
+    "title": "Lesson 3: Normalization and Feature Selection",
+    "section": "",
+    "text": "ID: SC-L03\nType: Lesson\nAudience: Public\nTheme: Normalization, variable genes, scaling\n\n\nContent coming soon.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Lesson 3: Normalization and Feature Selection</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html",
+    "href": "04-dimensionality-reduction-and-clustering.html",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "",
+    "text": "From Variable Genes to Structure\nIn the previous lesson, we:\nNow we use those genes to explore structure.\nDimensionality reduction does not create biology. It reveals structure already present in the data.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#from-variable-genes-to-structure",
+    "href": "04-dimensionality-reduction-and-clustering.html#from-variable-genes-to-structure",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "",
+    "text": "Normalized counts\nLog-transformed expression\nSelected highly variable genes",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#load-data-and-prepare-matrix",
+    "href": "04-dimensionality-reduction-and-clustering.html#load-data-and-prepare-matrix",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "Load Data and Prepare Matrix",
+    "text": "Load Data and Prepare Matrix\n\nsource(\"scripts/R/cdi-plot-theme.R\")\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)\n\ncounts &lt;- read.csv(\"data/demo-counts.csv\", row.names = 1)\nmetadata &lt;- read.csv(\"data/demo-metadata.csv\", stringsAsFactors = FALSE)\n\nlibrary_size &lt;- colSums(counts)\nnorm_counts &lt;- sweep(counts, 2, library_size, \"/\") * 10000\nlog_counts &lt;- log1p(norm_counts)\n\ngene_vars  &lt;- apply(log_counts, 1, var)\nvar_order &lt;- order(gene_vars, decreasing = TRUE)\nvariable_genes &lt;- rownames(log_counts)[var_order[1:200]]\n\nmat &lt;- t(log_counts[variable_genes, ])",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#principal-component-analysis-pca",
+    "href": "04-dimensionality-reduction-and-clustering.html#principal-component-analysis-pca",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "Principal Component Analysis (PCA)",
+    "text": "Principal Component Analysis (PCA)\n\npca &lt;- prcomp(mat, center = TRUE, scale. = TRUE)\n\npc_df &lt;- data.frame(\n  cell_id = metadata$cell_id,\n  PC1 = pca$x[,1],\n  PC2 = pca$x[,2],\n  percent_mt = metadata$percent_mt,\n  batch = metadata$batch\n)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-mitochondrial-percentage",
+    "href": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-mitochondrial-percentage",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "PCA Colored by Mitochondrial Percentage",
+    "text": "PCA Colored by Mitochondrial Percentage\n\nggplot(pc_df, aes(x = PC1, y = PC2, color = percent_mt)) +\n  geom_point(size = 2, alpha = 0.85) +\n  scale_color_viridis_c() +\n  labs(\n    title = \"PCA colored by mitochondrial percentage\",\n    subtitle = \"Technical structure may align with high percent_mt\",\n    x = \"PC1\",\n    y = \"PC2\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nTechnical structure is driving separation.\nPC1 is strongly aligned with mitochondrial percentage. This indicates that the dominant axis of variation is not purely biological.\nCells with high percent_mt are separating in reduced space, suggesting:\n\nTechnical stress\nApoptotic or dying cells\nCapture inefficiency\n\nIf clustering were performed without QC awareness, this axis could be mistaken for a biological subtype.\nIn single-cell analysis, the first question after PCA is not:\n“What cell type is this?”\nIt is:\n“Is this biology, or is this technical structure?”",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-batch",
+    "href": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-batch",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "PCA Colored by Batch",
+    "text": "PCA Colored by Batch\n\nggplot(pc_df, aes(x = PC1, y = PC2, color = batch)) +\n  geom_point(size = 2, alpha = 0.85) +\n  labs(\n    title = \"PCA colored by batch\",\n    subtitle = \"Batch-driven separation indicates technical variation\",\n    x = \"PC1\",\n    y = \"PC2\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nBatch does not dominate structure.\nBatches are intermingled within clusters. There is no strong batch-specific axis.\nThis suggests:\n\nMinimal batch effect\nReduced risk of confounding\n\nHere, mitochondrial QC signal is stronger than batch signal.\nThat distinction matters.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#clustering-k-means-example",
+    "href": "04-dimensionality-reduction-and-clustering.html#clustering-k-means-example",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "Clustering (K-means Example)",
+    "text": "Clustering (K-means Example)\nClustering assigns cells to algorithmic groups. Clusters are not automatically cell types.\n\nset.seed(123)\nkmeans_res &lt;- kmeans(pc_df[, c(\"PC1\", \"PC2\")], centers = 3)\n\npc_df$cluster &lt;- as.factor(kmeans_res$cluster)",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#pca-with-cluster-labels",
+    "href": "04-dimensionality-reduction-and-clustering.html#pca-with-cluster-labels",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "PCA with Cluster Labels",
+    "text": "PCA with Cluster Labels\n\nggplot(pc_df, aes(x = PC1, y = PC2, color = cluster)) +\n  geom_point(size = 2, alpha = 0.85) +\n  labs(\n    title = \"PCA with cluster assignments\",\n    subtitle = \"Clusters reflect structure in reduced space\",\n    x = \"PC1\",\n    y = \"PC2\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nOne cluster is likely QC-driven.\nThe clustering algorithm did not discover biology. It discovered structure.\nOne cluster corresponds closely to the high percent_mt region, suggesting:\n\nStressed cells\nLow-quality cells\nA technical axis captured by PCA\n\nThe other clusters are more biologically plausible populations.\nDimensionality reduction and clustering do not create meaning. They reveal structure. Interpretation assigns meaning.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#qc-check-percent_mt-by-cluster",
+    "href": "04-dimensionality-reduction-and-clustering.html#qc-check-percent_mt-by-cluster",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "QC Check: percent_mt by Cluster",
+    "text": "QC Check: percent_mt by Cluster\nThis plot tests whether mitochondrial percentage differs systematically across clusters.\n\nggplot(pc_df, aes(x = cluster, y = percent_mt)) +\n  geom_boxplot(alpha = 0.9, outlier.alpha = 0.6) +\n  labs(\n    title = \"Mitochondrial percentage by cluster\",\n    subtitle = \"Large shifts indicate clusters may be QC-driven\",\n    x = \"Cluster\",\n    y = \"percent_mt\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nIf one cluster has substantially higher percent_mt, it is a warning signal.\nIt suggests the cluster may reflect:\n\nCell stress\nLow-quality capture\nTechnical separation\n\nThis does not force filtering. It forces calibration.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#structural-calibration-before-biological-annotation",
+    "href": "04-dimensionality-reduction-and-clustering.html#structural-calibration-before-biological-annotation",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "Structural Calibration Before Biological Annotation",
+    "text": "Structural Calibration Before Biological Annotation\nBefore labeling clusters as biological identities, rule out:\n\nQC-driven clusters\nMitochondrial bias\nLibrary size effects\nBatch artifacts\n\nIn this dataset:\n\nOne cluster is likely technical.\nTwo clusters are biologically plausible.\n\nThat calibration step prevents false biological narratives.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#what-this-lesson-established",
+    "href": "04-dimensionality-reduction-and-clustering.html#what-this-lesson-established",
+    "title": "Lesson 4: Dimensionality Reduction and Clustering",
+    "section": "What This Lesson Established",
+    "text": "What This Lesson Established\nYou now understand:\n\nHow PCA reveals structure\nHow technical variables can align with structure\nWhy clusters are hypotheses, not truths\nHow to test whether a cluster is driven by QC metrics\n\nNext, we move to marker genes and annotation discipline.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html",
+    "href": "05-marker-genes-and-annotation.html",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "",
+    "text": "From Clusters to Markers\nClustering groups cells based on expression similarity.\nMarker analysis asks:\nWhich genes distinguish one cluster from the others?\nClusters are algorithmic. Markers provide biological evidence.\nMarker detection is still a statistical model, not proof of identity.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#load-data-and-recreate-objects",
+    "href": "05-marker-genes-and-annotation.html#load-data-and-recreate-objects",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Load Data and Recreate Objects",
+    "text": "Load Data and Recreate Objects\n\nsource(\"scripts/R/cdi-plot-theme.R\")\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)\n\n# Read counts as numeric matrix (avoid character columns)\ncounts_df &lt;- read.csv(\"data/demo-counts.csv\", check.names = FALSE)\nrownames(counts_df) &lt;- counts_df[, 1]\ncounts_df &lt;- counts_df[, -1, drop = FALSE]\ncounts &lt;- as.matrix(counts_df)\nstorage.mode(counts) &lt;- \"numeric\"\n\nmetadata &lt;- read.csv(\"data/demo-metadata.csv\", stringsAsFactors = FALSE)\n\n# Normalize + log transform\nlibrary_size &lt;- colSums(counts)\nnorm_counts &lt;- sweep(counts, 2, library_size, \"/\") * 10000\nlog_counts &lt;- log1p(norm_counts)\n\n# Variable genes\ngene_vars &lt;- apply(log_counts, 1, var)\nvar_order &lt;- order(gene_vars, decreasing = TRUE)\nvariable_genes &lt;- rownames(log_counts)[var_order[1:200]]\n\n# PCA for clustering\nmat &lt;- t(log_counts[variable_genes, ])\npca &lt;- prcomp(mat, center = TRUE, scale. = TRUE)\n\npc_df &lt;- data.frame(\n  PC1 = pca$x[, 1],\n  PC2 = pca$x[, 2]\n)\n\nset.seed(123)\nkmeans_res &lt;- kmeans(pc_df[, c(\"PC1\", \"PC2\")], centers = 3)\nclusters &lt;- as.factor(kmeans_res$cluster)\ntable(clusters)\n\nclusters\n  1   2   3 \n100 100 100",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#simple-marker-detection-cluster-1-vs-others",
+    "href": "05-marker-genes-and-annotation.html#simple-marker-detection-cluster-1-vs-others",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Simple Marker Detection (Cluster 1 vs Others)",
+    "text": "Simple Marker Detection (Cluster 1 vs Others)\nFor teaching, we use a per-gene two-sample t-test on log-normalized expression.\nIn real analyses, you should use models designed for single-cell data and account for confounding, library size, and zero inflation.\n\ncluster_id &lt;- \"1\"\n\ngroup1 &lt;- which(clusters == cluster_id)\ngroup2 &lt;- which(clusters != cluster_id)\n\nmarker_results &lt;- data.frame(\n  gene = rownames(log_counts),\n  logFC = NA_real_,\n  pvalue = NA_real_\n)\n\nfor (i in seq_len(nrow(log_counts))) {\n  g1 &lt;- as.numeric(log_counts[i, group1])\n  g2 &lt;- as.numeric(log_counts[i, group2])\n\n  # Effect size (mean difference)\n  marker_results$logFC[i] &lt;- mean(g1, na.rm = TRUE) - mean(g2, na.rm = TRUE)\n\n  # Some genes can be nearly constant; t.test may warn. We treat failures as NA.\n  tt &lt;- tryCatch(\n    suppressWarnings(t.test(g1, g2)),\n    error = function(e) NULL\n  )\n\n  marker_results$pvalue[i] &lt;- if (is.null(tt)) NA_real_ else tt$p.value\n}\n\nmarker_results$padj &lt;- p.adjust(marker_results$pvalue, method = \"BH\")\n\n# Define \"significant\" markers for visualization\nmarker_results$significant &lt;- !is.na(marker_results$padj) & marker_results$padj &lt; 0.05",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#volcano-plot",
+    "href": "05-marker-genes-and-annotation.html#volcano-plot",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Volcano Plot",
+    "text": "Volcano Plot\n\nvolcano_df &lt;- marker_results %&gt;%\n  mutate(neglog10_padj = -log10(padj))\n\nsig_cutoff &lt;- -log10(0.05)\n\nggplot(volcano_df, aes(x = logFC, y = neglog10_padj)) +\n  geom_point(aes(color = significant), alpha = 0.75) +\n  scale_color_manual(values = c(\"FALSE\" = \"grey70\", \"TRUE\" = \"#036281\")) +\n  geom_vline(xintercept = 0, linetype = \"dashed\") +\n  geom_hline(yintercept = sig_cutoff, linetype = \"dashed\") +\n  labs(\n    title = \"Marker gene volcano plot (Cluster 1)\",\n    subtitle = \"Significant genes highlighted after multiple testing correction\",\n    x = \"Mean difference in log expression (Cluster 1 minus others)\",\n    y = \"-log10(adjusted p-value)\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nThis volcano plot shows three regimes:\n\nCentral cloud near logFC = 0\nGenes with minimal difference between clusters. These form the null background.\nRight tail (positive logFC, high significance)\nGenes strongly higher in Cluster 1. Large effect sizes align with strong evidence.\nLeft tail (negative logFC)\nGenes depleted in Cluster 1 relative to others.\n\nWhat is striking here is not only statistical significance.\nIt is structural coherence.\nThe most significant genes are also those with large effect sizes. That alignment suggests Cluster 1 is genuinely distinct in expression space.\nHowever, this does not yet prove biological identity. It confirms expression differentiation.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#statistical-strength-does-not-equal-biological-identity",
+    "href": "05-marker-genes-and-annotation.html#statistical-strength-does-not-equal-biological-identity",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Statistical Strength Does Not Equal Biological Identity",
+    "text": "Statistical Strength Does Not Equal Biological Identity\nThis plot confirms:\n\nCluster 1 is transcriptionally distinct\nThe separation is not subtle\nThe signal survives multiple testing correction\n\nBut this does not tell us:\n\nWhether this cluster represents a known cell type\nWhether it reflects activation state\nWhether it reflects stress\nWhether it is a QC artifact\n\nRemember from Lesson 4:\nOne cluster aligned with high percent_mt.\nIf this volcano plot corresponds to that cluster, we may be detecting stress-response genes.\nStrong signal does not guarantee meaningful biology.\nIt guarantees difference.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#top-marker-table",
+    "href": "05-marker-genes-and-annotation.html#top-marker-table",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Top Marker Table",
+    "text": "Top Marker Table\n\nmarker_results %&gt;%\n  arrange(padj) %&gt;%\n  select(gene, logFC, pvalue, padj) %&gt;%\n  head(10)\n\n     gene    logFC       pvalue         padj\n1  Gene42 2.575896 1.068502e-59 5.342508e-57\n2  Gene52 2.473766 8.583349e-59 2.145837e-56\n3  Gene36 2.443114 3.946836e-56 6.578059e-54\n4  Gene41 2.528995 1.428426e-55 1.785532e-53\n5  Gene56 2.483521 9.258141e-55 9.258141e-53\n6  Gene38 2.449135 3.013533e-54 2.511277e-52\n7  Gene46 2.273613 2.939736e-53 2.099811e-51\n8  Gene35 2.252117 4.035237e-53 2.522023e-51\n9  Gene33 2.468930 9.381882e-53 5.212157e-51\n10 Gene37 2.382405 2.408427e-52 1.204214e-50\n\n\nInterpretation:\nThese genes show the strongest statistical separation under this simple test.\nBiological annotation requires:\n\nKnown gene function and specificity\nConsistency across datasets or references\nPlausibility given the experimental context",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#critical-distinction",
+    "href": "05-marker-genes-and-annotation.html#critical-distinction",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Critical Distinction",
+    "text": "Critical Distinction\nClustering answers:\nWhich cells group together?\nMarker analysis answers:\nWhich genes differentiate those groups?\nAnnotation answers:\nWhat biological identity best explains those genes?\nThese are three separate steps.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#annotation-is-a-hypothesis",
+    "href": "05-marker-genes-and-annotation.html#annotation-is-a-hypothesis",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "Annotation Is a Hypothesis",
+    "text": "Annotation Is a Hypothesis\nEven strong markers:\n\nMay reflect activation state rather than cell type\nMay be influenced by QC structure\nMay reflect stress responses\n\nAnnotation should be framed as:\n“Cluster 1 is consistent with X-like cells based on its marker profile.”\nNot:\n“Cluster 1 is definitively X.”",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#what-this-lesson-established",
+    "href": "05-marker-genes-and-annotation.html#what-this-lesson-established",
+    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "section": "What This Lesson Established",
+    "text": "What This Lesson Established\nYou now understand:\n\nHow to compute simple marker statistics without type issues\nHow to interpret volcano plots using both effect size and evidence\nWhy strong signal does not automatically imply cell identity\nWhy annotation is inference, not proof\n\nNext, we translate clusters and markers into calibrated biological claims.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+    ]
+  },
+  {
+    "objectID": "06-from-clusters-to-calibrated-biological-claims.html",
+    "href": "06-from-clusters-to-calibrated-biological-claims.html",
+    "title": "Lesson 6: From Clusters to Calibrated Biological Claims",
+    "section": "",
+    "text": "Why This Lesson Matters\nBy now we have:\nMany analyses stop here.\nBut clustering plus markers is not biological truth.\nThis lesson formalizes the reasoning discipline required before making biological claims.",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Lesson 6: From Clusters to Calibrated Biological Claims</span>"
+    ]
+  },
+  {
+    "objectID": "06-from-clusters-to-calibrated-biological-claims.html#why-this-lesson-matters",
+    "href": "06-from-clusters-to-calibrated-biological-claims.html#why-this-lesson-matters",
+    "title": "Lesson 6: From Clusters to Calibrated Biological Claims",
+    "section": "",
+    "text": "Performed QC\nIdentified technical structure\nReduced dimensionality\nClustered cells\nIdentified marker genes",
+    "crumbs": [
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Lesson 6: From Clusters to Calibrated Biological Claims</span>"
+    ]
+  }
+]
