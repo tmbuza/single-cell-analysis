@@ -12,7 +12,7 @@
 
 ## Why This Lesson Matters
 
-In Lesson 4, we saw that:
+In Lesson 4, we established that:
 
 - PCA amplifies selected variance.
 - Clusters reflect compressed variance space.
@@ -79,7 +79,7 @@ If a gene is a strong marker, it must:
 - Contribute to amplified variance
 - Align with PCA-driven structure
 
-Markers quantify the structure created by selected variance.
+Marker analysis quantifies the same variance logic introduced in Lesson 3.
 
 ---
 
@@ -149,20 +149,15 @@ ggplot(volcano_df, aes(x = logFC, y = neglog10_padj)) +
 
 ## Interpretation
 
-This plot reflects the same variance logic from Lesson 3 and 4.
+This volcano plot reflects the same variance compression logic:
 
-Large absolute logFC values indicate genes contributing strongly to cluster separation.
-
-High -log10(padj) values indicate statistical stability.
-
-When effect size and significance align, separation is structurally coherent.
-
-If clusters were formed by selected variance,
-markers must align with that same variance structure.
+- Large absolute logFC values indicate genes contributing strongly to separation.
+- High -log10(padj) values indicate statistical stability.
+- When effect size and significance align, structure is coherent.
 
 Marker analysis does not discover new structure.
 
-It quantifies existing variance compression.
+It quantifies structure already created by selected variance and PCA compression.
 
 ---
 
@@ -176,7 +171,7 @@ its strongest markers may reflect:
 - Technical artifacts
 - Capture bias
 
-This is why marker interpretation must always be linked back to:
+Marker interpretation must always be linked back to:
 
 Variance selection → PCA → Clustering → Calibration.
 
@@ -191,8 +186,6 @@ You now understand:
 - Strong markers reflect structure already present in PCA space.
 - Marker analysis does not replace calibration.
 
-Clusters are hypotheses.
-
-Markers are quantified variance.
-
+Clusters are hypotheses.  
+Markers are quantified variance.  
 Interpretation requires discipline.

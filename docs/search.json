@@ -254,7 +254,27 @@
     "href": "03-normalization-and-feature-selection.html",
     "title": "Lesson 3: Normalization and Feature Selection",
     "section": "",
-    "text": "ID: SC-L03\nType: Lesson\nAudience: Public\nTheme: Normalization, variable genes, scaling\n\n\nContent coming soon.",
+    "text": "Why This Lesson Matters\nRaw single-cell counts are not directly comparable across cells.\nCells differ in:\nIf we reduce dimensions without normalization, PCA may primarily capture total counts rather than biology.\nNormalization determines what structure is allowed to emerge.\nFeature selection determines which genes are allowed to shape that structure.",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Lesson 3: Normalization and Feature Selection</span>"
+    ]
+  },
+  {
+    "objectID": "03-normalization-and-feature-selection.html#why-this-lesson-matters",
+    "href": "03-normalization-and-feature-selection.html#why-this-lesson-matters",
+    "title": "Lesson 3: Normalization and Feature Selection",
+    "section": "",
+    "text": "Sequencing depth\n\nCapture efficiency\n\nLibrary size",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Lesson 3: Normalization and Feature Selection</span>"
+    ]
+  },
+  {
+    "objectID": "03-normalization-and-feature-selection.html#interpretation-1",
+    "href": "03-normalization-and-feature-selection.html#interpretation-1",
+    "title": "Lesson 3: Normalization and Feature Selection",
+    "section": "Interpretation",
+    "text": "Interpretation\nTwo key patterns emerge:\n\nVariance increases with mean expression.\nA subset of genes exhibits substantially higher variance.\n\nThese high-variance genes are most likely to drive:\n\nPrincipal component separation\n\nCluster formation\n\nMarker gene detection\n\nLow-variance genes contribute relatively little to structure.\nPCA does not discover structure — it amplifies variance.\nFeature selection determines which variance is amplified.",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Lesson 3: Normalization and Feature Selection</span>"
     ]
@@ -264,107 +284,57 @@
     "href": "04-dimensionality-reduction-and-clustering.html",
     "title": "Lesson 4: Dimensionality Reduction and Clustering",
     "section": "",
-    "text": "From Variable Genes to Structure\nIn the previous lesson, we:\nNow we use those genes to explore structure.\nDimensionality reduction does not create biology. It reveals structure already present in the data.",
+    "text": "Why This Lesson Matters\nIn Lesson 3, we learned:\nNow we allow that selected variance to define structure.\nDimensionality reduction does not create biology.\nIt compresses variance into interpretable axes.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
     ]
   },
   {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#from-variable-genes-to-structure",
-    "href": "04-dimensionality-reduction-and-clustering.html#from-variable-genes-to-structure",
+    "objectID": "04-dimensionality-reduction-and-clustering.html#why-this-lesson-matters",
+    "href": "04-dimensionality-reduction-and-clustering.html#why-this-lesson-matters",
     "title": "Lesson 4: Dimensionality Reduction and Clustering",
     "section": "",
-    "text": "Normalized counts\nLog-transformed expression\nSelected highly variable genes",
+    "text": "PCA amplifies variance.\nFeature selection determines which variance is amplified.\nHighly variable genes shape downstream embeddings.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
     ]
   },
   {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#load-data-and-prepare-matrix",
-    "href": "04-dimensionality-reduction-and-clustering.html#load-data-and-prepare-matrix",
+    "objectID": "04-dimensionality-reduction-and-clustering.html#interpretation",
+    "href": "04-dimensionality-reduction-and-clustering.html#interpretation",
     "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "Load Data and Prepare Matrix",
-    "text": "Load Data and Prepare Matrix\n\nsource(\"scripts/R/cdi-plot-theme.R\")\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)\n\ncounts &lt;- read.csv(\"data/demo-counts.csv\", row.names = 1)\nmetadata &lt;- read.csv(\"data/demo-metadata.csv\", stringsAsFactors = FALSE)\n\nlibrary_size &lt;- colSums(counts)\nnorm_counts &lt;- sweep(counts, 2, library_size, \"/\") * 10000\nlog_counts &lt;- log1p(norm_counts)\n\ngene_vars  &lt;- apply(log_counts, 1, var)\nvar_order &lt;- order(gene_vars, decreasing = TRUE)\nvariable_genes &lt;- rownames(log_counts)[var_order[1:200]]\n\nmat &lt;- t(log_counts[variable_genes, ])",
+    "section": "Interpretation",
+    "text": "Interpretation\nIf percent_mt aligns with PC1 or PC2:\n\nMitochondrial-associated genes influenced the selected variance.\nTechnical variation contributes to visible structure.\n\nStructure is diagnostic, not automatically biological.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
     ]
   },
   {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#principal-component-analysis-pca",
-    "href": "04-dimensionality-reduction-and-clustering.html#principal-component-analysis-pca",
+    "objectID": "04-dimensionality-reduction-and-clustering.html#interpretation-1",
+    "href": "04-dimensionality-reduction-and-clustering.html#interpretation-1",
     "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "Principal Component Analysis (PCA)",
-    "text": "Principal Component Analysis (PCA)\n\npca &lt;- prcomp(mat, center = TRUE, scale. = TRUE)\n\npc_df &lt;- data.frame(\n  cell_id = metadata$cell_id,\n  PC1 = pca$x[,1],\n  PC2 = pca$x[,2],\n  percent_mt = metadata$percent_mt,\n  batch = metadata$batch\n)",
+    "section": "Interpretation",
+    "text": "Interpretation\nIf batch drives separation:\n\nBatch influences variable genes, or\n\nTrue biology differs between batches.\n\nStructure alone cannot resolve this.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
     ]
   },
   {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-mitochondrial-percentage",
-    "href": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-mitochondrial-percentage",
+    "objectID": "04-dimensionality-reduction-and-clustering.html#what-clusters-represent",
+    "href": "04-dimensionality-reduction-and-clustering.html#what-clusters-represent",
     "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "PCA Colored by Mitochondrial Percentage",
-    "text": "PCA Colored by Mitochondrial Percentage\n\nggplot(pc_df, aes(x = PC1, y = PC2, color = percent_mt)) +\n  geom_point(size = 2, alpha = 0.85) +\n  scale_color_viridis_c() +\n  labs(\n    title = \"PCA colored by mitochondrial percentage\",\n    subtitle = \"Technical structure may align with high percent_mt\",\n    x = \"PC1\",\n    y = \"PC2\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nTechnical structure is driving separation.\nPC1 is strongly aligned with mitochondrial percentage. This indicates that the dominant axis of variation is not purely biological.\nCells with high percent_mt are separating in reduced space, suggesting:\n\nTechnical stress\nApoptotic or dying cells\nCapture inefficiency\n\nIf clustering were performed without QC awareness, this axis could be mistaken for a biological subtype.\nIn single-cell analysis, the first question after PCA is not:\n“What cell type is this?”\nIt is:\n“Is this biology, or is this technical structure?”",
+    "section": "What Clusters Represent",
+    "text": "What Clusters Represent\nClusters represent cells similar in selected variance space.\nThey are the compression of selected variance, not biological labels.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
     ]
   },
   {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-batch",
-    "href": "04-dimensionality-reduction-and-clustering.html#pca-colored-by-batch",
+    "objectID": "04-dimensionality-reduction-and-clustering.html#interpretation-2",
+    "href": "04-dimensionality-reduction-and-clustering.html#interpretation-2",
     "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "PCA Colored by Batch",
-    "text": "PCA Colored by Batch\n\nggplot(pc_df, aes(x = PC1, y = PC2, color = batch)) +\n  geom_point(size = 2, alpha = 0.85) +\n  labs(\n    title = \"PCA colored by batch\",\n    subtitle = \"Batch-driven separation indicates technical variation\",\n    x = \"PC1\",\n    y = \"PC2\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nBatch does not dominate structure.\nBatches are intermingled within clusters. There is no strong batch-specific axis.\nThis suggests:\n\nMinimal batch effect\nReduced risk of confounding\n\nHere, mitochondrial QC signal is stronger than batch signal.\nThat distinction matters.",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
-    ]
-  },
-  {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#clustering-k-means-example",
-    "href": "04-dimensionality-reduction-and-clustering.html#clustering-k-means-example",
-    "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "Clustering (K-means Example)",
-    "text": "Clustering (K-means Example)\nClustering assigns cells to algorithmic groups. Clusters are not automatically cell types.\n\nset.seed(123)\nkmeans_res &lt;- kmeans(pc_df[, c(\"PC1\", \"PC2\")], centers = 3)\n\npc_df$cluster &lt;- as.factor(kmeans_res$cluster)",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
-    ]
-  },
-  {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#pca-with-cluster-labels",
-    "href": "04-dimensionality-reduction-and-clustering.html#pca-with-cluster-labels",
-    "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "PCA with Cluster Labels",
-    "text": "PCA with Cluster Labels\n\nggplot(pc_df, aes(x = PC1, y = PC2, color = cluster)) +\n  geom_point(size = 2, alpha = 0.85) +\n  labs(\n    title = \"PCA with cluster assignments\",\n    subtitle = \"Clusters reflect structure in reduced space\",\n    x = \"PC1\",\n    y = \"PC2\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nOne cluster is likely QC-driven.\nThe clustering algorithm did not discover biology. It discovered structure.\nOne cluster corresponds closely to the high percent_mt region, suggesting:\n\nStressed cells\nLow-quality cells\nA technical axis captured by PCA\n\nThe other clusters are more biologically plausible populations.\nDimensionality reduction and clustering do not create meaning. They reveal structure. Interpretation assigns meaning.",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
-    ]
-  },
-  {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#qc-check-percent_mt-by-cluster",
-    "href": "04-dimensionality-reduction-and-clustering.html#qc-check-percent_mt-by-cluster",
-    "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "QC Check: percent_mt by Cluster",
-    "text": "QC Check: percent_mt by Cluster\nThis plot tests whether mitochondrial percentage differs systematically across clusters.\n\nggplot(pc_df, aes(x = cluster, y = percent_mt)) +\n  geom_boxplot(alpha = 0.9, outlier.alpha = 0.6) +\n  labs(\n    title = \"Mitochondrial percentage by cluster\",\n    subtitle = \"Large shifts indicate clusters may be QC-driven\",\n    x = \"Cluster\",\n    y = \"percent_mt\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nIf one cluster has substantially higher percent_mt, it is a warning signal.\nIt suggests the cluster may reflect:\n\nCell stress\nLow-quality capture\nTechnical separation\n\nThis does not force filtering. It forces calibration.",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
-    ]
-  },
-  {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#structural-calibration-before-biological-annotation",
-    "href": "04-dimensionality-reduction-and-clustering.html#structural-calibration-before-biological-annotation",
-    "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "Structural Calibration Before Biological Annotation",
-    "text": "Structural Calibration Before Biological Annotation\nBefore labeling clusters as biological identities, rule out:\n\nQC-driven clusters\nMitochondrial bias\nLibrary size effects\nBatch artifacts\n\nIn this dataset:\n\nOne cluster is likely technical.\nTwo clusters are biologically plausible.\n\nThat calibration step prevents false biological narratives.",
-    "crumbs": [
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
-    ]
-  },
-  {
-    "objectID": "04-dimensionality-reduction-and-clustering.html#what-this-lesson-established",
-    "href": "04-dimensionality-reduction-and-clustering.html#what-this-lesson-established",
-    "title": "Lesson 4: Dimensionality Reduction and Clustering",
-    "section": "What This Lesson Established",
-    "text": "What This Lesson Established\nYou now understand:\n\nHow PCA reveals structure\nHow technical variables can align with structure\nWhy clusters are hypotheses, not truths\nHow to test whether a cluster is driven by QC metrics\n\nNext, we move to marker genes and annotation discipline.",
+    "section": "Interpretation",
+    "text": "Interpretation\nIf one cluster has elevated mitochondrial percentage:\n\nStructure is partially technical.\nMarker interpretation must be calibrated.\nBiological claims must be constrained.\n\nStructure is variance geometry.\nMeaning requires calibration.",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Lesson 4: Dimensionality Reduction and Clustering</span>"
     ]
@@ -372,91 +342,31 @@
   {
     "objectID": "05-marker-genes-and-annotation.html",
     "href": "05-marker-genes-and-annotation.html",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
+    "title": "Lesson 5: Marker Genes and Variance-Driven Separation",
     "section": "",
-    "text": "From Clusters to Markers\nClustering groups cells based on expression similarity.\nMarker analysis asks:\nWhich genes distinguish one cluster from the others?\nClusters are algorithmic. Markers provide biological evidence.\nMarker detection is still a statistical model, not proof of identity.",
+    "text": "Why This Lesson Matters\nIn Lesson 4, we saw that:\nMarker analysis now asks:\nWhich genes are responsible for the separation we observe?\nMarkers do not create clusters.\nThey explain the variance that created them.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Variance-Driven Separation</span>"
     ]
   },
   {
-    "objectID": "05-marker-genes-and-annotation.html#load-data-and-recreate-objects",
-    "href": "05-marker-genes-and-annotation.html#load-data-and-recreate-objects",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Load Data and Recreate Objects",
-    "text": "Load Data and Recreate Objects\n\nsource(\"scripts/R/cdi-plot-theme.R\")\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)\n\n# Read counts as numeric matrix (avoid character columns)\ncounts_df &lt;- read.csv(\"data/demo-counts.csv\", check.names = FALSE)\nrownames(counts_df) &lt;- counts_df[, 1]\ncounts_df &lt;- counts_df[, -1, drop = FALSE]\ncounts &lt;- as.matrix(counts_df)\nstorage.mode(counts) &lt;- \"numeric\"\n\nmetadata &lt;- read.csv(\"data/demo-metadata.csv\", stringsAsFactors = FALSE)\n\n# Normalize + log transform\nlibrary_size &lt;- colSums(counts)\nnorm_counts &lt;- sweep(counts, 2, library_size, \"/\") * 10000\nlog_counts &lt;- log1p(norm_counts)\n\n# Variable genes\ngene_vars &lt;- apply(log_counts, 1, var)\nvar_order &lt;- order(gene_vars, decreasing = TRUE)\nvariable_genes &lt;- rownames(log_counts)[var_order[1:200]]\n\n# PCA for clustering\nmat &lt;- t(log_counts[variable_genes, ])\npca &lt;- prcomp(mat, center = TRUE, scale. = TRUE)\n\npc_df &lt;- data.frame(\n  PC1 = pca$x[, 1],\n  PC2 = pca$x[, 2]\n)\n\nset.seed(123)\nkmeans_res &lt;- kmeans(pc_df[, c(\"PC1\", \"PC2\")], centers = 3)\nclusters &lt;- as.factor(kmeans_res$cluster)\ntable(clusters)\n\nclusters\n  1   2   3 \n100 100 100",
+    "objectID": "05-marker-genes-and-annotation.html#why-this-lesson-matters",
+    "href": "05-marker-genes-and-annotation.html#why-this-lesson-matters",
+    "title": "Lesson 5: Marker Genes and Variance-Driven Separation",
+    "section": "",
+    "text": "PCA amplifies selected variance.\nClusters reflect compressed variance space.\nStructure emerges from highly variable genes.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Variance-Driven Separation</span>"
     ]
   },
   {
-    "objectID": "05-marker-genes-and-annotation.html#simple-marker-detection-cluster-1-vs-others",
-    "href": "05-marker-genes-and-annotation.html#simple-marker-detection-cluster-1-vs-others",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Simple Marker Detection (Cluster 1 vs Others)",
-    "text": "Simple Marker Detection (Cluster 1 vs Others)\nFor teaching, we use a per-gene two-sample t-test on log-normalized expression.\nIn real analyses, you should use models designed for single-cell data and account for confounding, library size, and zero inflation.\n\ncluster_id &lt;- \"1\"\n\ngroup1 &lt;- which(clusters == cluster_id)\ngroup2 &lt;- which(clusters != cluster_id)\n\nmarker_results &lt;- data.frame(\n  gene = rownames(log_counts),\n  logFC = NA_real_,\n  pvalue = NA_real_\n)\n\nfor (i in seq_len(nrow(log_counts))) {\n  g1 &lt;- as.numeric(log_counts[i, group1])\n  g2 &lt;- as.numeric(log_counts[i, group2])\n\n  # Effect size (mean difference)\n  marker_results$logFC[i] &lt;- mean(g1, na.rm = TRUE) - mean(g2, na.rm = TRUE)\n\n  # Some genes can be nearly constant; t.test may warn. We treat failures as NA.\n  tt &lt;- tryCatch(\n    suppressWarnings(t.test(g1, g2)),\n    error = function(e) NULL\n  )\n\n  marker_results$pvalue[i] &lt;- if (is.null(tt)) NA_real_ else tt$p.value\n}\n\nmarker_results$padj &lt;- p.adjust(marker_results$pvalue, method = \"BH\")\n\n# Define \"significant\" markers for visualization\nmarker_results$significant &lt;- !is.na(marker_results$padj) & marker_results$padj &lt; 0.05",
+    "objectID": "05-marker-genes-and-annotation.html#interpretation",
+    "href": "05-marker-genes-and-annotation.html#interpretation",
+    "title": "Lesson 5: Marker Genes and Variance-Driven Separation",
+    "section": "Interpretation",
+    "text": "Interpretation\nThis plot reflects the same variance logic from Lesson 3 and 4.\nLarge absolute logFC values indicate genes contributing strongly to cluster separation.\nHigh -log10(padj) values indicate statistical stability.\nWhen effect size and significance align, separation is structurally coherent.\nIf clusters were formed by selected variance, markers must align with that same variance structure.\nMarker analysis does not discover new structure.\nIt quantifies existing variance compression.",
     "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
-    ]
-  },
-  {
-    "objectID": "05-marker-genes-and-annotation.html#volcano-plot",
-    "href": "05-marker-genes-and-annotation.html#volcano-plot",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Volcano Plot",
-    "text": "Volcano Plot\n\nvolcano_df &lt;- marker_results %&gt;%\n  mutate(neglog10_padj = -log10(padj))\n\nsig_cutoff &lt;- -log10(0.05)\n\nggplot(volcano_df, aes(x = logFC, y = neglog10_padj)) +\n  geom_point(aes(color = significant), alpha = 0.75) +\n  scale_color_manual(values = c(\"FALSE\" = \"grey70\", \"TRUE\" = \"#036281\")) +\n  geom_vline(xintercept = 0, linetype = \"dashed\") +\n  geom_hline(yintercept = sig_cutoff, linetype = \"dashed\") +\n  labs(\n    title = \"Marker gene volcano plot (Cluster 1)\",\n    subtitle = \"Significant genes highlighted after multiple testing correction\",\n    x = \"Mean difference in log expression (Cluster 1 minus others)\",\n    y = \"-log10(adjusted p-value)\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\n\nInterpretation\nThis volcano plot shows three regimes:\n\nCentral cloud near logFC = 0\nGenes with minimal difference between clusters. These form the null background.\nRight tail (positive logFC, high significance)\nGenes strongly higher in Cluster 1. Large effect sizes align with strong evidence.\nLeft tail (negative logFC)\nGenes depleted in Cluster 1 relative to others.\n\nWhat is striking here is not only statistical significance.\nIt is structural coherence.\nThe most significant genes are also those with large effect sizes. That alignment suggests Cluster 1 is genuinely distinct in expression space.\nHowever, this does not yet prove biological identity. It confirms expression differentiation.",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
-    ]
-  },
-  {
-    "objectID": "05-marker-genes-and-annotation.html#statistical-strength-does-not-equal-biological-identity",
-    "href": "05-marker-genes-and-annotation.html#statistical-strength-does-not-equal-biological-identity",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Statistical Strength Does Not Equal Biological Identity",
-    "text": "Statistical Strength Does Not Equal Biological Identity\nThis plot confirms:\n\nCluster 1 is transcriptionally distinct\nThe separation is not subtle\nThe signal survives multiple testing correction\n\nBut this does not tell us:\n\nWhether this cluster represents a known cell type\nWhether it reflects activation state\nWhether it reflects stress\nWhether it is a QC artifact\n\nRemember from Lesson 4:\nOne cluster aligned with high percent_mt.\nIf this volcano plot corresponds to that cluster, we may be detecting stress-response genes.\nStrong signal does not guarantee meaningful biology.\nIt guarantees difference.",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
-    ]
-  },
-  {
-    "objectID": "05-marker-genes-and-annotation.html#top-marker-table",
-    "href": "05-marker-genes-and-annotation.html#top-marker-table",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Top Marker Table",
-    "text": "Top Marker Table\n\nmarker_results %&gt;%\n  arrange(padj) %&gt;%\n  select(gene, logFC, pvalue, padj) %&gt;%\n  head(10)\n\n     gene    logFC       pvalue         padj\n1  Gene42 2.575896 1.068502e-59 5.342508e-57\n2  Gene52 2.473766 8.583349e-59 2.145837e-56\n3  Gene36 2.443114 3.946836e-56 6.578059e-54\n4  Gene41 2.528995 1.428426e-55 1.785532e-53\n5  Gene56 2.483521 9.258141e-55 9.258141e-53\n6  Gene38 2.449135 3.013533e-54 2.511277e-52\n7  Gene46 2.273613 2.939736e-53 2.099811e-51\n8  Gene35 2.252117 4.035237e-53 2.522023e-51\n9  Gene33 2.468930 9.381882e-53 5.212157e-51\n10 Gene37 2.382405 2.408427e-52 1.204214e-50\n\n\nInterpretation:\nThese genes show the strongest statistical separation under this simple test.\nBiological annotation requires:\n\nKnown gene function and specificity\nConsistency across datasets or references\nPlausibility given the experimental context",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
-    ]
-  },
-  {
-    "objectID": "05-marker-genes-and-annotation.html#critical-distinction",
-    "href": "05-marker-genes-and-annotation.html#critical-distinction",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Critical Distinction",
-    "text": "Critical Distinction\nClustering answers:\nWhich cells group together?\nMarker analysis answers:\nWhich genes differentiate those groups?\nAnnotation answers:\nWhat biological identity best explains those genes?\nThese are three separate steps.",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
-    ]
-  },
-  {
-    "objectID": "05-marker-genes-and-annotation.html#annotation-is-a-hypothesis",
-    "href": "05-marker-genes-and-annotation.html#annotation-is-a-hypothesis",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "Annotation Is a Hypothesis",
-    "text": "Annotation Is a Hypothesis\nEven strong markers:\n\nMay reflect activation state rather than cell type\nMay be influenced by QC structure\nMay reflect stress responses\n\nAnnotation should be framed as:\n“Cluster 1 is consistent with X-like cells based on its marker profile.”\nNot:\n“Cluster 1 is definitively X.”",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
-    ]
-  },
-  {
-    "objectID": "05-marker-genes-and-annotation.html#what-this-lesson-established",
-    "href": "05-marker-genes-and-annotation.html#what-this-lesson-established",
-    "title": "Lesson 5: Marker Genes and Annotation Discipline",
-    "section": "What This Lesson Established",
-    "text": "What This Lesson Established\nYou now understand:\n\nHow to compute simple marker statistics without type issues\nHow to interpret volcano plots using both effect size and evidence\nWhy strong signal does not automatically imply cell identity\nWhy annotation is inference, not proof\n\nNext, we translate clusters and markers into calibrated biological claims.",
-    "crumbs": [
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Annotation Discipline</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Lesson 5: Marker Genes and Variance-Driven Separation</span>"
     ]
   },
   {
@@ -464,17 +374,7 @@
     "href": "06-from-clusters-to-calibrated-biological-claims.html",
     "title": "Lesson 6: From Clusters to Calibrated Biological Claims",
     "section": "",
-    "text": "Why This Lesson Matters\nBy now we have:\nMany analyses stop here.\nBut clustering plus markers is not biological truth.\nThis lesson formalizes the reasoning discipline required before making biological claims.",
-    "crumbs": [
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Lesson 6: From Clusters to Calibrated Biological Claims</span>"
-    ]
-  },
-  {
-    "objectID": "06-from-clusters-to-calibrated-biological-claims.html#why-this-lesson-matters",
-    "href": "06-from-clusters-to-calibrated-biological-claims.html#why-this-lesson-matters",
-    "title": "Lesson 6: From Clusters to Calibrated Biological Claims",
-    "section": "",
-    "text": "Performed QC\nIdentified technical structure\nReduced dimensionality\nClustered cells\nIdentified marker genes",
+    "text": "Why This Lesson Matters\nAcross this free track, we have moved from raw counts to clusters and marker genes.\nNow we formalize the reasoning discipline that connects them.\nClusters exist because selected variance was compressed into principal components.\nMarker genes are the genes that dominate that compressed variance.\nBiological claims must be constrained by that logic.",
     "crumbs": [
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Lesson 6: From Clusters to Calibrated Biological Claims</span>"
     ]

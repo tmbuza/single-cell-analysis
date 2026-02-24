@@ -1,30 +1,33 @@
+
 # Lesson 4: Dimensionality Reduction and Clustering
 
 :::cdi-message
 - **ID:** SC-L04
-- **Type:** Structure Modeling
+- **Type:** Structure Discovery
 - **Audience:** Public
-- **Theme:** PCA, technical structure checks, clustering logic, and interpretation discipline
+- **Theme:** How selected variance becomes structure in reduced space
 :::
-
-## From Variable Genes to Structure
-
-In the previous lesson, we:
-
-- Normalized counts
-- Log-transformed expression
-- Selected highly variable genes
-
-Now we use those genes to explore structure.
-
-Dimensionality reduction does not create biology.
-It reveals structure already present in the data.
 
 ---
 
-## Load Data and Prepare Matrix
+## Why This Lesson Matters
 
-```{r load-data}
+In Lesson 3, we learned:
+
+- PCA amplifies variance.
+- Feature selection determines which variance is amplified.
+- Highly variable genes shape downstream embeddings.
+
+Now we allow that selected variance to define structure.
+
+Dimensionality reduction does not create biology.  
+It compresses variance into interpretable axes.
+
+---
+
+# Load Data and Recompute Variable Genes
+
+```{r}
 #| message: false
 #| warning: false
 
@@ -32,235 +35,168 @@ source("scripts/R/cdi-plot-theme.R")
 
 library(ggplot2)
 library(dplyr)
-library(readr)
 
-counts <- read.csv("data/demo-counts.csv", row.names = 1)
+counts_df <- read.csv("data/demo-counts.csv", check.names = FALSE)
+rownames(counts_df) <- counts_df[, 1]
+counts_df <- counts_df[, -1, drop = FALSE]
+counts <- as.matrix(counts_df)
+storage.mode(counts) <- "numeric"
+
 metadata <- read.csv("data/demo-metadata.csv", stringsAsFactors = FALSE)
 
 library_size <- colSums(counts)
 norm_counts <- sweep(counts, 2, library_size, "/") * 10000
 log_counts <- log1p(norm_counts)
 
-gene_vars  <- apply(log_counts, 1, var)
+gene_vars <- apply(log_counts, 1, var)
 var_order <- order(gene_vars, decreasing = TRUE)
 variable_genes <- rownames(log_counts)[var_order[1:200]]
-
-mat <- t(log_counts[variable_genes, ])
 ```
 
 ---
 
-## Principal Component Analysis (PCA)
+# Principal Component Analysis
 
-```{r run-pca}
+```{r}
 #| message: false
 #| warning: false
 
-pca <- prcomp(mat, center = TRUE, scale. = TRUE)
+pca_input <- t(log_counts[variable_genes, ])
 
-pc_df <- data.frame(
-  cell_id = metadata$cell_id,
-  PC1 = pca$x[,1],
-  PC2 = pca$x[,2],
+pca_res <- prcomp(pca_input, center = TRUE, scale. = FALSE)
+
+pca_df <- data.frame(
+  PC1 = pca_res$x[, 1],
+  PC2 = pca_res$x[, 2],
   percent_mt = metadata$percent_mt,
   batch = metadata$batch
 )
+
+summary(pca_res)$importance[2, 1:5]
 ```
 
 ---
 
-## PCA Colored by Mitochondrial Percentage
+# PCA Colored by Mitochondrial Percentage
 
-```{r plot-pca-mt}
-#| message: false
-#| warning: false
-
-ggplot(pc_df, aes(x = PC1, y = PC2, color = percent_mt)) +
-  geom_point(size = 2, alpha = 0.85) +
-  scale_color_viridis_c() +
+```{r}
+ggplot(pca_df, aes(x = PC1, y = PC2, color = percent_mt)) +
+  geom_point(size = 2.2, alpha = 0.85) +
+  scale_color_viridis_c(option = "viridis") +
   labs(
     title = "PCA colored by mitochondrial percentage",
-    subtitle = "Technical structure may align with high percent_mt",
+    subtitle = "Technical structure may align with selected variance",
     x = "PC1",
-    y = "PC2"
+    y = "PC2",
+    color = "percent_mt"
   ) +
   cdi_theme()
 ```
 
-### Interpretation
+## Interpretation
 
-**Technical structure is driving separation.**
+If percent_mt aligns with PC1 or PC2:
 
-PC1 is strongly aligned with mitochondrial percentage.
-This indicates that the dominant axis of variation is not purely biological.
+- Mitochondrial-associated genes influenced the selected variance.
+- Technical variation contributes to visible structure.
 
-Cells with high percent_mt are separating in reduced space, suggesting:
-
-- Technical stress
-- Apoptotic or dying cells
-- Capture inefficiency
-
-If clustering were performed without QC awareness, this axis could be mistaken for a biological subtype.
-
-In single-cell analysis, the first question after PCA is not:
-
-"What cell type is this?"
-
-It is:
-
-"Is this biology, or is this technical structure?"
+Structure is diagnostic, not automatically biological.
 
 ---
 
-## PCA Colored by Batch
+# PCA Colored by Batch
 
-```{r plot-pca-batch}
-#| message: false
-#| warning: false
-
-ggplot(pc_df, aes(x = PC1, y = PC2, color = batch)) +
-  geom_point(size = 2, alpha = 0.85) +
+```{r}
+ggplot(pca_df, aes(x = PC1, y = PC2, color = batch)) +
+  geom_point(size = 2.2, alpha = 0.85) +
   labs(
     title = "PCA colored by batch",
-    subtitle = "Batch-driven separation indicates technical variation",
+    subtitle = "Batch-driven separation reflects structured variance",
     x = "PC1",
-    y = "PC2"
+    y = "PC2",
+    color = "Batch"
   ) +
   cdi_theme()
 ```
 
-### Interpretation
+## Interpretation
 
-**Batch does not dominate structure.**
+If batch drives separation:
 
-Batches are intermingled within clusters.
-There is no strong batch-specific axis.
+- Batch influences variable genes, or  
+- True biology differs between batches.
 
-This suggests:
-
-- Minimal batch effect
-- Reduced risk of confounding
-
-Here, mitochondrial QC signal is stronger than batch signal.
-
-That distinction matters.
+Structure alone cannot resolve this.
 
 ---
 
-## Clustering (K-means Example)
+# Clustering in Reduced Space
 
-Clustering assigns cells to algorithmic groups.
-Clusters are not automatically cell types.
-
-```{r kmeans-clustering}
-#| message: false
-#| warning: false
-
+```{r}
 set.seed(123)
-kmeans_res <- kmeans(pc_df[, c("PC1", "PC2")], centers = 3)
-
-pc_df$cluster <- as.factor(kmeans_res$cluster)
+clusters <- kmeans(pca_res$x[, 1:2], centers = 3)$cluster
+pca_df$cluster <- factor(clusters)
 ```
 
 ---
 
-## PCA with Cluster Labels
+# PCA with Cluster Assignments
 
-```{r plot-pca-cluster}
-#| message: false
-#| warning: false
-
-ggplot(pc_df, aes(x = PC1, y = PC2, color = cluster)) +
-  geom_point(size = 2, alpha = 0.85) +
+```{r}
+ggplot(pca_df, aes(x = PC1, y = PC2, color = cluster)) +
+  geom_point(size = 2.2, alpha = 0.9) +
   labs(
     title = "PCA with cluster assignments",
-    subtitle = "Clusters reflect structure in reduced space",
+    subtitle = "Clusters reflect structure in selected variance space",
     x = "PC1",
-    y = "PC2"
+    y = "PC2",
+    color = "Cluster"
   ) +
   cdi_theme()
 ```
 
-### Interpretation
+## What Clusters Represent
 
-**One cluster is likely QC-driven.**
+Clusters represent cells similar in selected variance space.
 
-The clustering algorithm did not discover biology.
-It discovered structure.
-
-One cluster corresponds closely to the high percent_mt region, suggesting:
-
-- Stressed cells
-- Low-quality cells
-- A technical axis captured by PCA
-
-The other clusters are more biologically plausible populations.
-
-Dimensionality reduction and clustering do not create meaning.
-They reveal structure.
-Interpretation assigns meaning.
+They are the compression of selected variance, not biological labels.
 
 ---
 
-## QC Check: percent_mt by Cluster
+# Mitochondrial Percentage by Cluster
 
-This plot tests whether mitochondrial percentage differs systematically across clusters.
-
-```{r boxplot-percent-mt-by-cluster}
-#| message: false
-#| warning: false
-
-ggplot(pc_df, aes(x = cluster, y = percent_mt)) +
-  geom_boxplot(alpha = 0.9, outlier.alpha = 0.6) +
+```{r}
+ggplot(pca_df, aes(x = cluster, y = percent_mt, fill = cluster)) +
+  geom_boxplot(alpha = 0.8) +
   labs(
     title = "Mitochondrial percentage by cluster",
-    subtitle = "Large shifts indicate clusters may be QC-driven",
+    subtitle = "Cluster-level QC alignment must be evaluated",
     x = "Cluster",
     y = "percent_mt"
   ) +
   cdi_theme()
 ```
 
-### Interpretation
+## Interpretation
 
-If one cluster has substantially higher percent_mt, it is a warning signal.
+If one cluster has elevated mitochondrial percentage:
 
-It suggests the cluster may reflect:
+- Structure is partially technical.
+- Marker interpretation must be calibrated.
+- Biological claims must be constrained.
 
-- Cell stress
-- Low-quality capture
-- Technical separation
-
-This does not force filtering.
-It forces calibration.
+Structure is variance geometry.  
+Meaning requires calibration.
 
 ---
 
-## Structural Calibration Before Biological Annotation
-
-Before labeling clusters as biological identities, rule out:
-
-- QC-driven clusters
-- Mitochondrial bias
-- Library size effects
-- Batch artifacts
-
-In this dataset:
-
-- One cluster is likely technical.
-- Two clusters are biologically plausible.
-
-That calibration step prevents false biological narratives.
-
----
-
-## What This Lesson Established
+# What This Lesson Established
 
 You now understand:
 
-- How PCA reveals structure
-- How technical variables can align with structure
-- Why clusters are hypotheses, not truths
-- How to test whether a cluster is driven by QC metrics
+- PCA amplifies selected variance.
+- Technical metrics can align with structure.
+- Clusters reflect compressed variance space.
+- QC must be evaluated at cluster level.
 
-Next, we move to marker genes and annotation discipline.
+Next lesson: from clusters to marker genes.

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lesson 5: Marker Genes and Annotation Discipline – Single-Cell Analysis</title>
+<title>Lesson 5: Marker Genes and Variance-Driven Separation – Single-Cell Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></a>
+  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -188,17 +188,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#from-clusters-to-markers" id="toc-from-clusters-to-markers" class="nav-link active" data-scroll-target="#from-clusters-to-markers">From Clusters to Markers</a></li>
-  <li><a href="#load-data-and-recreate-objects" id="toc-load-data-and-recreate-objects" class="nav-link" data-scroll-target="#load-data-and-recreate-objects">Load Data and Recreate Objects</a></li>
-  <li><a href="#simple-marker-detection-cluster-1-vs-others" id="toc-simple-marker-detection-cluster-1-vs-others" class="nav-link" data-scroll-target="#simple-marker-detection-cluster-1-vs-others">Simple Marker Detection (Cluster 1 vs Others)</a></li>
-  <li><a href="#volcano-plot" id="toc-volcano-plot" class="nav-link" data-scroll-target="#volcano-plot">Volcano Plot</a>
+  <li><a href="#why-this-lesson-matters" id="toc-why-this-lesson-matters" class="nav-link active" data-scroll-target="#why-this-lesson-matters">Why This Lesson Matters</a></li>
+  <li><a href="#load-data-and-recompute-structure" id="toc-load-data-and-recompute-structure" class="nav-link" data-scroll-target="#load-data-and-recompute-structure">Load Data and Recompute Structure</a></li>
+  <li><a href="#what-marker-analysis-really-tests" id="toc-what-marker-analysis-really-tests" class="nav-link" data-scroll-target="#what-marker-analysis-really-tests">What Marker Analysis Really Tests</a></li>
+  <li><a href="#differential-expression-cluster-1-vs-others" id="toc-differential-expression-cluster-1-vs-others" class="nav-link" data-scroll-target="#differential-expression-cluster-1-vs-others">Differential Expression: Cluster 1 vs Others</a></li>
+  <li><a href="#volcano-plot-quantifying-separation" id="toc-volcano-plot-quantifying-separation" class="nav-link" data-scroll-target="#volcano-plot-quantifying-separation">Volcano Plot: Quantifying Separation</a>
   <ul class="collapse">
   <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
   </ul></li>
-  <li><a href="#statistical-strength-does-not-equal-biological-identity" id="toc-statistical-strength-does-not-equal-biological-identity" class="nav-link" data-scroll-target="#statistical-strength-does-not-equal-biological-identity">Statistical Strength Does Not Equal Biological Identity</a></li>
-  <li><a href="#top-marker-table" id="toc-top-marker-table" class="nav-link" data-scroll-target="#top-marker-table">Top Marker Table</a></li>
-  <li><a href="#critical-distinction" id="toc-critical-distinction" class="nav-link" data-scroll-target="#critical-distinction">Critical Distinction</a></li>
-  <li><a href="#annotation-is-a-hypothesis" id="toc-annotation-is-a-hypothesis" class="nav-link" data-scroll-target="#annotation-is-a-hypothesis">Annotation Is a Hypothesis</a></li>
+  <li><a href="#variance-logic-check" id="toc-variance-logic-check" class="nav-link" data-scroll-target="#variance-logic-check">Variance Logic Check</a></li>
   <li><a href="#what-this-lesson-established" id="toc-what-this-lesson-established" class="nav-link" data-scroll-target="#what-this-lesson-established">What This Lesson Established</a></li>
   </ul>
 </nav>
@@ -208,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></h1>
+<h1 class="title"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></h1>
 </div>
 
 
@@ -230,240 +228,170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>ID:</strong> SC-L05</li>
 <li><strong>Type:</strong> Differential Signal</li>
 <li><strong>Audience:</strong> Public</li>
-<li><strong>Theme:</strong> Identifying marker genes and separating clustering from biological identity</li>
+<li><strong>Theme:</strong> How marker genes quantify separation created by variance compression</li>
 </ul>
 </div>
-<section id="from-clusters-to-markers" class="level2">
-<h2 class="anchored" data-anchor-id="from-clusters-to-markers">From Clusters to Markers</h2>
-<p>Clustering groups cells based on expression similarity.</p>
-<p>Marker analysis asks:</p>
-<p>Which genes distinguish one cluster from the others?</p>
-<p>Clusters are algorithmic. Markers provide biological evidence.</p>
-<p>Marker detection is still a statistical model, not proof of identity.</p>
+<hr>
+<section id="why-this-lesson-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-lesson-matters">Why This Lesson Matters</h2>
+<p>In Lesson 4, we saw that:</p>
+<ul>
+<li>PCA amplifies selected variance.</li>
+<li>Clusters reflect compressed variance space.</li>
+<li>Structure emerges from highly variable genes.</li>
+</ul>
+<p>Marker analysis now asks:</p>
+<p>Which genes are responsible for the separation we observe?</p>
+<p>Markers do not create clusters.</p>
+<p>They explain the variance that created them.</p>
 <hr>
 </section>
-<section id="load-data-and-recreate-objects" class="level2">
-<h2 class="anchored" data-anchor-id="load-data-and-recreate-objects">Load Data and Recreate Objects</h2>
+<section id="load-data-and-recompute-structure" class="level1">
+<h1>Load Data and Recompute Structure</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/R/cdi-plot-theme.R"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Read counts as numeric matrix (avoid character columns)</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>counts_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-counts.csv"</span>, <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(counts_df) <span class="ot">&lt;-</span> counts_df[, <span class="dv">1</span>]</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>counts_df <span class="ot">&lt;-</span> counts_df[, <span class="sc">-</span><span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(counts_df)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">storage.mode</span>(counts) <span class="ot">&lt;-</span> <span class="st">"numeric"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>counts_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-counts.csv"</span>, <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(counts_df) <span class="ot">&lt;-</span> counts_df[, <span class="dv">1</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>counts_df <span class="ot">&lt;-</span> counts_df[, <span class="sc">-</span><span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(counts_df)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">storage.mode</span>(counts) <span class="ot">&lt;-</span> <span class="st">"numeric"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-metadata.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-metadata.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalize + log transform</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>library_size <span class="ot">&lt;-</span> <span class="fu">colSums</span>(counts)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>norm_counts <span class="ot">&lt;-</span> <span class="fu">sweep</span>(counts, <span class="dv">2</span>, library_size, <span class="st">"/"</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>log_counts <span class="ot">&lt;-</span> <span class="fu">log1p</span>(norm_counts)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable genes</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>gene_vars <span class="ot">&lt;-</span> <span class="fu">apply</span>(log_counts, <span class="dv">1</span>, var)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>var_order <span class="ot">&lt;-</span> <span class="fu">order</span>(gene_vars, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>variable_genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(log_counts)[var_order[<span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>]]</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA for clustering</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">t</span>(log_counts[variable_genes, ])</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(mat, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>pc_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC1 =</span> pca<span class="sc">$</span>x[, <span class="dv">1</span>],</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC2 =</span> pca<span class="sc">$</span>x[, <span class="dv">2</span>]</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>kmeans_res <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(pc_df[, <span class="fu">c</span>(<span class="st">"PC1"</span>, <span class="st">"PC2"</span>)], <span class="at">centers =</span> <span class="dv">3</span>)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(kmeans_res<span class="sc">$</span>cluster)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(clusters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>clusters
-  1   2   3 
-100 100 100 </code></pre>
-</div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>library_size <span class="ot">&lt;-</span> <span class="fu">colSums</span>(counts)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>norm_counts <span class="ot">&lt;-</span> <span class="fu">sweep</span>(counts, <span class="dv">2</span>, library_size, <span class="st">"/"</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>log_counts <span class="ot">&lt;-</span> <span class="fu">log1p</span>(norm_counts)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>gene_vars <span class="ot">&lt;-</span> <span class="fu">apply</span>(log_counts, <span class="dv">1</span>, var)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>var_order <span class="ot">&lt;-</span> <span class="fu">order</span>(gene_vars, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>variable_genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(log_counts)[var_order[<span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>]]</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>pca_input <span class="ot">&lt;-</span> <span class="fu">t</span>(log_counts[variable_genes, ])</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>pca_res <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(pca_input, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(pca_res<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">centers =</span> <span class="dv">3</span>)<span class="sc">$</span>cluster</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">factor</span>(clusters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 </section>
-<section id="simple-marker-detection-cluster-1-vs-others" class="level2">
-<h2 class="anchored" data-anchor-id="simple-marker-detection-cluster-1-vs-others">Simple Marker Detection (Cluster 1 vs Others)</h2>
-<p>For teaching, we use a per-gene two-sample t-test on log-normalized expression.</p>
-<p>In real analyses, you should use models designed for single-cell data and account for confounding, library size, and zero inflation.</p>
+<section id="what-marker-analysis-really-tests" class="level1">
+<h1>What Marker Analysis Really Tests</h1>
+<p>Clusters represent regions of compressed variance space.</p>
+<p>Marker testing asks:</p>
+<p>Which genes contribute most to that separation?</p>
+<p>If a gene is a strong marker, it must:</p>
+<ul>
+<li>Exhibit consistent expression difference between clusters</li>
+<li>Contribute to amplified variance</li>
+<li>Align with PCA-driven structure</li>
+</ul>
+<p>Markers quantify the structure created by selected variance.</p>
+<hr>
+</section>
+<section id="differential-expression-cluster-1-vs-others" class="level1">
+<h1>Differential Expression: Cluster 1 vs Others</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="st">"1"</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">which</span>(clusters <span class="sc">==</span> cluster_id)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">which</span>(clusters <span class="sc">!=</span> cluster_id)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cluster_id <span class="ot">&lt;-</span> <span class="st">"1"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>group1 <span class="ot">&lt;-</span> <span class="fu">which</span>(clusters <span class="sc">==</span> cluster_id)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>group2 <span class="ot">&lt;-</span> <span class="fu">which</span>(clusters <span class="sc">!=</span> cluster_id)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>marker_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> <span class="fu">rownames</span>(log_counts),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">logFC =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalue =</span> <span class="cn">NA_real_</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(log_counts))) {</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  g1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(log_counts[i, group1])</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  g2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(log_counts[i, group2])</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  marker_results<span class="sc">$</span>logFC[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g1) <span class="sc">-</span> <span class="fu">mean</span>(g2)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  tt <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressWarnings</span>(<span class="fu">t.test</span>(g1, g2)),</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  marker_results<span class="sc">$</span>pvalue[i] <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.null</span>(tt)) <span class="cn">NA_real_</span> <span class="cf">else</span> tt<span class="sc">$</span>p.value</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>marker_results<span class="sc">$</span>padj <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(marker_results<span class="sc">$</span>pvalue, <span class="at">method =</span> <span class="st">"BH"</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>marker_results<span class="sc">$</span>significant <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.na</span>(marker_results<span class="sc">$</span>padj) <span class="sc">&amp;</span> marker_results<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="volcano-plot-quantifying-separation" class="level1">
+<h1>Volcano Plot: Quantifying Separation</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>volcano_df <span class="ot">&lt;-</span> marker_results <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">neglog10_padj =</span> <span class="sc">-</span><span class="fu">log10</span>(padj))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>sig_cutoff <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">0.05</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>marker_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> <span class="fu">rownames</span>(log_counts),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">logFC =</span> <span class="cn">NA_real_</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalue =</span> <span class="cn">NA_real_</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(log_counts))) {</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  g1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(log_counts[i, group1])</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  g2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(log_counts[i, group2])</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Effect size (mean difference)</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  marker_results<span class="sc">$</span>logFC[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">-</span> <span class="fu">mean</span>(g2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Some genes can be nearly constant; t.test may warn. We treat failures as NA.</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  tt <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressWarnings</span>(<span class="fu">t.test</span>(g1, g2)),</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  marker_results<span class="sc">$</span>pvalue[i] <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.null</span>(tt)) <span class="cn">NA_real_</span> <span class="cf">else</span> tt<span class="sc">$</span>p.value</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>marker_results<span class="sc">$</span>padj <span class="ot">&lt;-</span> <span class="fu">p.adjust</span>(marker_results<span class="sc">$</span>pvalue, <span class="at">method =</span> <span class="st">"BH"</span>)</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Define "significant" markers for visualization</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>marker_results<span class="sc">$</span>significant <span class="ot">&lt;-</span> <span class="sc">!</span><span class="fu">is.na</span>(marker_results<span class="sc">$</span>padj) <span class="sc">&amp;</span> marker_results<span class="sc">$</span>padj <span class="sc">&lt;</span> <span class="fl">0.05</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<hr>
-</section>
-<section id="volcano-plot" class="level2">
-<h2 class="anchored" data-anchor-id="volcano-plot">Volcano Plot</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>volcano_df <span class="ot">&lt;-</span> marker_results <span class="sc">%&gt;%</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">neglog10_padj =</span> <span class="sc">-</span><span class="fu">log10</span>(padj))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>sig_cutoff <span class="ot">&lt;-</span> <span class="sc">-</span><span class="fu">log10</span>(<span class="fl">0.05</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(volcano_df, <span class="fu">aes</span>(<span class="at">x =</span> logFC, <span class="at">y =</span> neglog10_padj)) <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> significant), <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"grey70"</span>, <span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"#036281"</span>)) <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> sig_cutoff, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Marker gene volcano plot (Cluster 1)"</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Significant genes highlighted after multiple testing correction"</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mean difference in log expression (Cluster 1 minus others)"</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"-log10(adjusted p-value)"</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(volcano_df, <span class="fu">aes</span>(<span class="at">x =</span> logFC, <span class="at">y =</span> neglog10_padj)) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> significant), <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"FALSE"</span> <span class="ot">=</span> <span class="st">"grey70"</span>, <span class="st">"TRUE"</span> <span class="ot">=</span> <span class="st">"#036281"</span>)) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> sig_cutoff, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Marker gene volcano plot"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Markers quantify variance-driven separation"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Mean difference (Cluster 1 minus others)"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"-log10(adjusted p-value)"</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="05-marker-genes-and-annotation_files/figure-html/volcano-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="05-marker-genes-and-annotation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<section id="interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
-<p>This volcano plot shows three regimes:</p>
-<ol type="1">
-<li><p><strong>Central cloud near logFC = 0</strong><br>
-Genes with minimal difference between clusters. These form the null background.</p></li>
-<li><p><strong>Right tail (positive logFC, high significance)</strong><br>
-Genes strongly higher in Cluster 1. Large effect sizes align with strong evidence.</p></li>
-<li><p><strong>Left tail (negative logFC)</strong><br>
-Genes depleted in Cluster 1 relative to others.</p></li>
-</ol>
-<p>What is striking here is not only statistical significance.</p>
-<p>It is structural coherence.</p>
-<p>The most significant genes are also those with large effect sizes. That alignment suggests Cluster 1 is genuinely distinct in expression space.</p>
-<p>However, this does not yet prove biological identity. It confirms expression differentiation.</p>
+<hr>
+<section id="interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
+<p>This plot reflects the same variance logic from Lesson 3 and 4.</p>
+<p>Large absolute logFC values indicate genes contributing strongly to cluster separation.</p>
+<p>High -log10(padj) values indicate statistical stability.</p>
+<p>When effect size and significance align, separation is structurally coherent.</p>
+<p>If clusters were formed by selected variance, markers must align with that same variance structure.</p>
+<p>Marker analysis does not discover new structure.</p>
+<p>It quantifies existing variance compression.</p>
 <hr>
 </section>
 </section>
-<section id="statistical-strength-does-not-equal-biological-identity" class="level2">
-<h2 class="anchored" data-anchor-id="statistical-strength-does-not-equal-biological-identity">Statistical Strength Does Not Equal Biological Identity</h2>
-<p>This plot confirms:</p>
+<section id="variance-logic-check" class="level1">
+<h1>Variance Logic Check</h1>
+<p>If a cluster aligns with QC metrics (e.g., percent_mt),</p>
+<p>its strongest markers may reflect:</p>
 <ul>
-<li>Cluster 1 is transcriptionally distinct</li>
-<li>The separation is not subtle</li>
-<li>The signal survives multiple testing correction</li>
+<li>Stress-response genes</li>
+<li>Technical artifacts</li>
+<li>Capture bias</li>
 </ul>
-<p>But this does not tell us:</p>
-<ul>
-<li>Whether this cluster represents a known cell type</li>
-<li>Whether it reflects activation state</li>
-<li>Whether it reflects stress</li>
-<li>Whether it is a QC artifact</li>
-</ul>
-<p>Remember from Lesson 4:</p>
-<p>One cluster aligned with high percent_mt.</p>
-<p>If this volcano plot corresponds to that cluster, we may be detecting stress-response genes.</p>
-<p>Strong signal does not guarantee meaningful biology.</p>
-<p>It guarantees difference.</p>
+<p>This is why marker interpretation must always be linked back to:</p>
+<p>Variance selection → PCA → Clustering → Calibration.</p>
 <hr>
 </section>
-<section id="top-marker-table" class="level2">
-<h2 class="anchored" data-anchor-id="top-marker-table">Top Marker Table</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>marker_results <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(padj) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(gene, logFC, pvalue, padj) <span class="sc">%&gt;%</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     gene    logFC       pvalue         padj
-1  Gene42 2.575896 1.068502e-59 5.342508e-57
-2  Gene52 2.473766 8.583349e-59 2.145837e-56
-3  Gene36 2.443114 3.946836e-56 6.578059e-54
-4  Gene41 2.528995 1.428426e-55 1.785532e-53
-5  Gene56 2.483521 9.258141e-55 9.258141e-53
-6  Gene38 2.449135 3.013533e-54 2.511277e-52
-7  Gene46 2.273613 2.939736e-53 2.099811e-51
-8  Gene35 2.252117 4.035237e-53 2.522023e-51
-9  Gene33 2.468930 9.381882e-53 5.212157e-51
-10 Gene37 2.382405 2.408427e-52 1.204214e-50</code></pre>
-</div>
-</div>
-<p>Interpretation:</p>
-<p>These genes show the strongest statistical separation under this simple test.</p>
-<p>Biological annotation requires:</p>
-<ul>
-<li>Known gene function and specificity</li>
-<li>Consistency across datasets or references</li>
-<li>Plausibility given the experimental context</li>
-</ul>
-<hr>
-</section>
-<section id="critical-distinction" class="level2">
-<h2 class="anchored" data-anchor-id="critical-distinction">Critical Distinction</h2>
-<p>Clustering answers:</p>
-<p>Which cells group together?</p>
-<p>Marker analysis answers:</p>
-<p>Which genes differentiate those groups?</p>
-<p>Annotation answers:</p>
-<p>What biological identity best explains those genes?</p>
-<p>These are three separate steps.</p>
-<hr>
-</section>
-<section id="annotation-is-a-hypothesis" class="level2">
-<h2 class="anchored" data-anchor-id="annotation-is-a-hypothesis">Annotation Is a Hypothesis</h2>
-<p>Even strong markers:</p>
-<ul>
-<li>May reflect activation state rather than cell type</li>
-<li>May be influenced by QC structure</li>
-<li>May reflect stress responses</li>
-</ul>
-<p>Annotation should be framed as:</p>
-<p>“Cluster 1 is consistent with X-like cells based on its marker profile.”</p>
-<p>Not:</p>
-<p>“Cluster 1 is definitively X.”</p>
-<hr>
-</section>
-<section id="what-this-lesson-established" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-lesson-established">What This Lesson Established</h2>
+<section id="what-this-lesson-established" class="level1">
+<h1>What This Lesson Established</h1>
 <p>You now understand:</p>
 <ul>
-<li>How to compute simple marker statistics without type issues</li>
-<li>How to interpret volcano plots using both effect size and evidence</li>
-<li>Why strong signal does not automatically imply cell identity</li>
-<li>Why annotation is inference, not proof</li>
+<li>Marker genes quantify variance-driven separation.</li>
+<li>Effect size and statistical evidence must align.</li>
+<li>Strong markers reflect structure already present in PCA space.</li>
+<li>Marker analysis does not replace calibration.</li>
 </ul>
-<p>Next, we translate clusters and markers into calibrated biological claims.</p>
+<p>Clusters are hypotheses.</p>
+<p>Markers are quantified variance.</p>
+<p>Interpretation requires discipline.</p>
 
 
 </section>

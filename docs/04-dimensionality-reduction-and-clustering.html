@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></a>
+  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -188,9 +188,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#from-variable-genes-to-structure" id="toc-from-variable-genes-to-structure" class="nav-link active" data-scroll-target="#from-variable-genes-to-structure">From Variable Genes to Structure</a></li>
-  <li><a href="#load-data-and-prepare-matrix" id="toc-load-data-and-prepare-matrix" class="nav-link" data-scroll-target="#load-data-and-prepare-matrix">Load Data and Prepare Matrix</a></li>
-  <li><a href="#principal-component-analysis-pca" id="toc-principal-component-analysis-pca" class="nav-link" data-scroll-target="#principal-component-analysis-pca">Principal Component Analysis (PCA)</a></li>
+  <li><a href="#why-this-lesson-matters" id="toc-why-this-lesson-matters" class="nav-link active" data-scroll-target="#why-this-lesson-matters">Why This Lesson Matters</a></li>
+  <li><a href="#load-data-and-recompute-variable-genes" id="toc-load-data-and-recompute-variable-genes" class="nav-link" data-scroll-target="#load-data-and-recompute-variable-genes">Load Data and Recompute Variable Genes</a></li>
+  <li><a href="#principal-component-analysis" id="toc-principal-component-analysis" class="nav-link" data-scroll-target="#principal-component-analysis">Principal Component Analysis</a></li>
   <li><a href="#pca-colored-by-mitochondrial-percentage" id="toc-pca-colored-by-mitochondrial-percentage" class="nav-link" data-scroll-target="#pca-colored-by-mitochondrial-percentage">PCA Colored by Mitochondrial Percentage</a>
   <ul class="collapse">
   <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation">Interpretation</a></li>
@@ -199,16 +199,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#interpretation-1" id="toc-interpretation-1" class="nav-link" data-scroll-target="#interpretation-1">Interpretation</a></li>
   </ul></li>
-  <li><a href="#clustering-k-means-example" id="toc-clustering-k-means-example" class="nav-link" data-scroll-target="#clustering-k-means-example">Clustering (K-means Example)</a></li>
-  <li><a href="#pca-with-cluster-labels" id="toc-pca-with-cluster-labels" class="nav-link" data-scroll-target="#pca-with-cluster-labels">PCA with Cluster Labels</a>
+  <li><a href="#clustering-in-reduced-space" id="toc-clustering-in-reduced-space" class="nav-link" data-scroll-target="#clustering-in-reduced-space">Clustering in Reduced Space</a></li>
+  <li><a href="#pca-with-cluster-assignments" id="toc-pca-with-cluster-assignments" class="nav-link" data-scroll-target="#pca-with-cluster-assignments">PCA with Cluster Assignments</a>
+  <ul class="collapse">
+  <li><a href="#what-clusters-represent" id="toc-what-clusters-represent" class="nav-link" data-scroll-target="#what-clusters-represent">What Clusters Represent</a></li>
+  </ul></li>
+  <li><a href="#mitochondrial-percentage-by-cluster" id="toc-mitochondrial-percentage-by-cluster" class="nav-link" data-scroll-target="#mitochondrial-percentage-by-cluster">Mitochondrial Percentage by Cluster</a>
   <ul class="collapse">
   <li><a href="#interpretation-2" id="toc-interpretation-2" class="nav-link" data-scroll-target="#interpretation-2">Interpretation</a></li>
   </ul></li>
-  <li><a href="#qc-check-percent_mt-by-cluster" id="toc-qc-check-percent_mt-by-cluster" class="nav-link" data-scroll-target="#qc-check-percent_mt-by-cluster">QC Check: percent_mt by Cluster</a>
-  <ul class="collapse">
-  <li><a href="#interpretation-3" id="toc-interpretation-3" class="nav-link" data-scroll-target="#interpretation-3">Interpretation</a></li>
-  </ul></li>
-  <li><a href="#structural-calibration-before-biological-annotation" id="toc-structural-calibration-before-biological-annotation" class="nav-link" data-scroll-target="#structural-calibration-before-biological-annotation">Structural Calibration Before Biological Annotation</a></li>
   <li><a href="#what-this-lesson-established" id="toc-what-this-lesson-established" class="nav-link" data-scroll-target="#what-this-lesson-established">What This Lesson Established</a></li>
   </ul>
 </nav>
@@ -238,242 +237,219 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cdi-message">
 <ul>
 <li><strong>ID:</strong> SC-L04</li>
-<li><strong>Type:</strong> Structure Modeling</li>
+<li><strong>Type:</strong> Structure Discovery</li>
 <li><strong>Audience:</strong> Public</li>
-<li><strong>Theme:</strong> PCA, technical structure checks, clustering logic, and interpretation discipline</li>
+<li><strong>Theme:</strong> How selected variance becomes structure in reduced space</li>
 </ul>
 </div>
-<section id="from-variable-genes-to-structure" class="level2">
-<h2 class="anchored" data-anchor-id="from-variable-genes-to-structure">From Variable Genes to Structure</h2>
-<p>In the previous lesson, we:</p>
+<hr>
+<section id="why-this-lesson-matters" class="level2">
+<h2 class="anchored" data-anchor-id="why-this-lesson-matters">Why This Lesson Matters</h2>
+<p>In Lesson 3, we learned:</p>
 <ul>
-<li>Normalized counts</li>
-<li>Log-transformed expression</li>
-<li>Selected highly variable genes</li>
+<li>PCA amplifies variance.</li>
+<li>Feature selection determines which variance is amplified.</li>
+<li>Highly variable genes shape downstream embeddings.</li>
 </ul>
-<p>Now we use those genes to explore structure.</p>
-<p>Dimensionality reduction does not create biology. It reveals structure already present in the data.</p>
+<p>Now we allow that selected variance to define structure.</p>
+<p>Dimensionality reduction does not create biology.<br>
+It compresses variance into interpretable axes.</p>
 <hr>
 </section>
-<section id="load-data-and-prepare-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="load-data-and-prepare-matrix">Load Data and Prepare Matrix</h2>
+<section id="load-data-and-recompute-variable-genes" class="level1">
+<h1>Load Data and Recompute Variable Genes</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/R/cdi-plot-theme.R"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-counts.csv"</span>, <span class="at">row.names =</span> <span class="dv">1</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-metadata.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>library_size <span class="ot">&lt;-</span> <span class="fu">colSums</span>(counts)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>norm_counts <span class="ot">&lt;-</span> <span class="fu">sweep</span>(counts, <span class="dv">2</span>, library_size, <span class="st">"/"</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>log_counts <span class="ot">&lt;-</span> <span class="fu">log1p</span>(norm_counts)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>counts_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-counts.csv"</span>, <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(counts_df) <span class="ot">&lt;-</span> counts_df[, <span class="dv">1</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>counts_df <span class="ot">&lt;-</span> counts_df[, <span class="sc">-</span><span class="dv">1</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(counts_df)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">storage.mode</span>(counts) <span class="ot">&lt;-</span> <span class="st">"numeric"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/demo-metadata.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>gene_vars  <span class="ot">&lt;-</span> <span class="fu">apply</span>(log_counts, <span class="dv">1</span>, var)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>var_order <span class="ot">&lt;-</span> <span class="fu">order</span>(gene_vars, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>variable_genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(log_counts)[var_order[<span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>]]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>library_size <span class="ot">&lt;-</span> <span class="fu">colSums</span>(counts)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>norm_counts <span class="ot">&lt;-</span> <span class="fu">sweep</span>(counts, <span class="dv">2</span>, library_size, <span class="st">"/"</span>) <span class="sc">*</span> <span class="dv">10000</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>log_counts <span class="ot">&lt;-</span> <span class="fu">log1p</span>(norm_counts)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">t</span>(log_counts[variable_genes, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>gene_vars <span class="ot">&lt;-</span> <span class="fu">apply</span>(log_counts, <span class="dv">1</span>, var)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>var_order <span class="ot">&lt;-</span> <span class="fu">order</span>(gene_vars, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>variable_genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(log_counts)[var_order[<span class="dv">1</span><span class="sc">:</span><span class="dv">200</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 </section>
-<section id="principal-component-analysis-pca" class="level2">
-<h2 class="anchored" data-anchor-id="principal-component-analysis-pca">Principal Component Analysis (PCA)</h2>
+<section id="principal-component-analysis" class="level1">
+<h1>Principal Component Analysis</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pca <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(mat, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pca_input <span class="ot">&lt;-</span> <span class="fu">t</span>(log_counts[variable_genes, ])</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pc_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cell_id =</span> metadata<span class="sc">$</span>cell_id,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC1 =</span> pca<span class="sc">$</span>x[,<span class="dv">1</span>],</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC2 =</span> pca<span class="sc">$</span>x[,<span class="dv">2</span>],</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">percent_mt =</span> metadata<span class="sc">$</span>percent_mt,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">batch =</span> metadata<span class="sc">$</span>batch</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>pca_res <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(pca_input, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pca_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC1 =</span> pca_res<span class="sc">$</span>x[, <span class="dv">1</span>],</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">PC2 =</span> pca_res<span class="sc">$</span>x[, <span class="dv">2</span>],</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">percent_mt =</span> metadata<span class="sc">$</span>percent_mt,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">batch =</span> metadata<span class="sc">$</span>batch</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pca_res)<span class="sc">$</span>importance[<span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    PC1     PC2     PC3     PC4     PC5 
+0.10858 0.10163 0.01318 0.01274 0.01270 </code></pre>
+</div>
 </div>
 <hr>
 </section>
-<section id="pca-colored-by-mitochondrial-percentage" class="level2">
-<h2 class="anchored" data-anchor-id="pca-colored-by-mitochondrial-percentage">PCA Colored by Mitochondrial Percentage</h2>
+<section id="pca-colored-by-mitochondrial-percentage" class="level1">
+<h1>PCA Colored by Mitochondrial Percentage</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc_df, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> percent_mt)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA colored by mitochondrial percentage"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Technical structure may align with high percent_mt"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PC1"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PC2"</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_df, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> percent_mt)) <span class="sc">+</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.2</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="at">option =</span> <span class="st">"viridis"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA colored by mitochondrial percentage"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Technical structure may align with selected variance"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PC1"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PC2"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"percent_mt"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/plot-pca-mt-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<section id="interpretation" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
-<p><strong>Technical structure is driving separation.</strong></p>
-<p>PC1 is strongly aligned with mitochondrial percentage. This indicates that the dominant axis of variation is not purely biological.</p>
-<p>Cells with high percent_mt are separating in reduced space, suggesting:</p>
+<section id="interpretation" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation">Interpretation</h2>
+<p>If percent_mt aligns with PC1 or PC2:</p>
 <ul>
-<li>Technical stress</li>
-<li>Apoptotic or dying cells</li>
-<li>Capture inefficiency</li>
+<li>Mitochondrial-associated genes influenced the selected variance.</li>
+<li>Technical variation contributes to visible structure.</li>
 </ul>
-<p>If clustering were performed without QC awareness, this axis could be mistaken for a biological subtype.</p>
-<p>In single-cell analysis, the first question after PCA is not:</p>
-<p>“What cell type is this?”</p>
-<p>It is:</p>
-<p>“Is this biology, or is this technical structure?”</p>
+<p>Structure is diagnostic, not automatically biological.</p>
 <hr>
 </section>
 </section>
-<section id="pca-colored-by-batch" class="level2">
-<h2 class="anchored" data-anchor-id="pca-colored-by-batch">PCA Colored by Batch</h2>
+<section id="pca-colored-by-batch" class="level1">
+<h1>PCA Colored by Batch</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc_df, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> batch)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA colored by batch"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Batch-driven separation indicates technical variation"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PC1"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PC2"</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_df, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> batch)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.2</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA colored by batch"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Batch-driven separation reflects structured variance"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PC1"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PC2"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Batch"</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/plot-pca-batch-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<section id="interpretation-1" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-1">Interpretation</h3>
-<p><strong>Batch does not dominate structure.</strong></p>
-<p>Batches are intermingled within clusters. There is no strong batch-specific axis.</p>
-<p>This suggests:</p>
+<section id="interpretation-1" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation-1">Interpretation</h2>
+<p>If batch drives separation:</p>
 <ul>
-<li>Minimal batch effect</li>
-<li>Reduced risk of confounding</li>
+<li>Batch influences variable genes, or<br>
+</li>
+<li>True biology differs between batches.</li>
 </ul>
-<p>Here, mitochondrial QC signal is stronger than batch signal.</p>
-<p>That distinction matters.</p>
+<p>Structure alone cannot resolve this.</p>
 <hr>
 </section>
 </section>
-<section id="clustering-k-means-example" class="level2">
-<h2 class="anchored" data-anchor-id="clustering-k-means-example">Clustering (K-means Example)</h2>
-<p>Clustering assigns cells to algorithmic groups. Clusters are not automatically cell types.</p>
+<section id="clustering-in-reduced-space" class="level1">
+<h1>Clustering in Reduced Space</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>kmeans_res <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(pc_df[, <span class="fu">c</span>(<span class="st">"PC1"</span>, <span class="st">"PC2"</span>)], <span class="at">centers =</span> <span class="dv">3</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>pc_df<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(kmeans_res<span class="sc">$</span>cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(pca_res<span class="sc">$</span>x[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">centers =</span> <span class="dv">3</span>)<span class="sc">$</span>cluster</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>pca_df<span class="sc">$</span>cluster <span class="ot">&lt;-</span> <span class="fu">factor</span>(clusters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
 </section>
-<section id="pca-with-cluster-labels" class="level2">
-<h2 class="anchored" data-anchor-id="pca-with-cluster-labels">PCA with Cluster Labels</h2>
+<section id="pca-with-cluster-assignments" class="level1">
+<h1>PCA with Cluster Assignments</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc_df, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> cluster)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA with cluster assignments"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Clusters reflect structure in reduced space"</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PC1"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PC2"</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/plot-pca-cluster-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="interpretation-2" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-2">Interpretation</h3>
-<p><strong>One cluster is likely QC-driven.</strong></p>
-<p>The clustering algorithm did not discover biology. It discovered structure.</p>
-<p>One cluster corresponds closely to the high percent_mt region, suggesting:</p>
-<ul>
-<li>Stressed cells</li>
-<li>Low-quality cells</li>
-<li>A technical axis captured by PCA</li>
-</ul>
-<p>The other clusters are more biologically plausible populations.</p>
-<p>Dimensionality reduction and clustering do not create meaning. They reveal structure. Interpretation assigns meaning.</p>
-<hr>
-</section>
-</section>
-<section id="qc-check-percent_mt-by-cluster" class="level2">
-<h2 class="anchored" data-anchor-id="qc-check-percent_mt-by-cluster">QC Check: percent_mt by Cluster</h2>
-<p>This plot tests whether mitochondrial percentage differs systematically across clusters.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pc_df, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> percent_mt)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.9</span>, <span class="at">outlier.alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_df, <span class="fu">aes</span>(<span class="at">x =</span> PC1, <span class="at">y =</span> PC2, <span class="at">color =</span> cluster)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.2</span>, <span class="at">alpha =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mitochondrial percentage by cluster"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Large shifts indicate clusters may be QC-driven"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cluster"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"percent_mt"</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"PCA with cluster assignments"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Clusters reflect structure in selected variance space"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PC1"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"PC2"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Cluster"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/boxplot-percent-mt-by-cluster-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<section id="interpretation-3" class="level3">
-<h3 class="anchored" data-anchor-id="interpretation-3">Interpretation</h3>
-<p>If one cluster has substantially higher percent_mt, it is a warning signal.</p>
-<p>It suggests the cluster may reflect:</p>
-<ul>
-<li>Cell stress</li>
-<li>Low-quality capture</li>
-<li>Technical separation</li>
-</ul>
-<p>This does not force filtering. It forces calibration.</p>
+<section id="what-clusters-represent" class="level2">
+<h2 class="anchored" data-anchor-id="what-clusters-represent">What Clusters Represent</h2>
+<p>Clusters represent cells similar in selected variance space.</p>
+<p>They are the compression of selected variance, not biological labels.</p>
 <hr>
 </section>
 </section>
-<section id="structural-calibration-before-biological-annotation" class="level2">
-<h2 class="anchored" data-anchor-id="structural-calibration-before-biological-annotation">Structural Calibration Before Biological Annotation</h2>
-<p>Before labeling clusters as biological identities, rule out:</p>
+<section id="mitochondrial-percentage-by-cluster" class="level1">
+<h1>Mitochondrial Percentage by Cluster</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pca_df, <span class="fu">aes</span>(<span class="at">x =</span> cluster, <span class="at">y =</span> percent_mt, <span class="at">fill =</span> cluster)) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Mitochondrial percentage by cluster"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Cluster-level QC alignment must be evaluated"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Cluster"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"percent_mt"</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cdi_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="04-dimensionality-reduction-and-clustering_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="interpretation-2" class="level2">
+<h2 class="anchored" data-anchor-id="interpretation-2">Interpretation</h2>
+<p>If one cluster has elevated mitochondrial percentage:</p>
 <ul>
-<li>QC-driven clusters</li>
-<li>Mitochondrial bias</li>
-<li>Library size effects</li>
-<li>Batch artifacts</li>
+<li>Structure is partially technical.</li>
+<li>Marker interpretation must be calibrated.</li>
+<li>Biological claims must be constrained.</li>
 </ul>
-<p>In this dataset:</p>
-<ul>
-<li>One cluster is likely technical.</li>
-<li>Two clusters are biologically plausible.</li>
-</ul>
-<p>That calibration step prevents false biological narratives.</p>
+<p>Structure is variance geometry.<br>
+Meaning requires calibration.</p>
 <hr>
 </section>
-<section id="what-this-lesson-established" class="level2">
-<h2 class="anchored" data-anchor-id="what-this-lesson-established">What This Lesson Established</h2>
+</section>
+<section id="what-this-lesson-established" class="level1">
+<h1>What This Lesson Established</h1>
 <p>You now understand:</p>
 <ul>
-<li>How PCA reveals structure</li>
-<li>How technical variables can align with structure</li>
-<li>Why clusters are hypotheses, not truths</li>
-<li>How to test whether a cluster is driven by QC metrics</li>
+<li>PCA amplifies selected variance.</li>
+<li>Technical metrics can align with structure.</li>
+<li>Clusters reflect compressed variance space.</li>
+<li>QC must be evaluated at cluster level.</li>
 </ul>
-<p>Next, we move to marker genes and annotation discipline.</p>
+<p>Next lesson: from clusters to marker genes.</p>
 
 
 </section>
@@ -885,8 +861,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./05-marker-genes-and-annotation.html" class="pagination-link" aria-label="Lesson 5: Marker Genes and Annotation Discipline">
-        <span class="nav-page-text"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./05-marker-genes-and-annotation.html" class="pagination-link" aria-label="Lesson 5: Marker Genes and Variance-Driven Separation">
+        <span class="nav-page-text"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -134,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></a>
+  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -155,17 +155,16 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#why-this-lesson-matters" id="toc-why-this-lesson-matters" class="nav-link active" data-scroll-target="#why-this-lesson-matters">Why This Lesson Matters</a></li>
   <li><a href="#the-single-cell-interpretation-chain" id="toc-the-single-cell-interpretation-chain" class="nav-link" data-scroll-target="#the-single-cell-interpretation-chain">The Single-Cell Interpretation Chain</a></li>
   <li><a href="#step-1-qc-constrains-interpretation" id="toc-step-1-qc-constrains-interpretation" class="nav-link" data-scroll-target="#step-1-qc-constrains-interpretation">Step 1: QC Constrains Interpretation</a></li>
-  <li><a href="#step-2-structure-precedes-meaning" id="toc-step-2-structure-precedes-meaning" class="nav-link" data-scroll-target="#step-2-structure-precedes-meaning">Step 2: Structure Precedes Meaning</a></li>
-  <li><a href="#step-3-markers-provide-evidence-not-identity" id="toc-step-3-markers-provide-evidence-not-identity" class="nav-link" data-scroll-target="#step-3-markers-provide-evidence-not-identity">Step 3: Markers Provide Evidence, Not Identity</a></li>
-  <li><a href="#step-4-calibration-questions" id="toc-step-4-calibration-questions" class="nav-link" data-scroll-target="#step-4-calibration-questions">Step 4: Calibration Questions</a></li>
+  <li><a href="#step-2-structure-is-geometry" id="toc-step-2-structure-is-geometry" class="nav-link" data-scroll-target="#step-2-structure-is-geometry">Step 2: Structure Is Geometry</a></li>
+  <li><a href="#step-3-markers-quantify-separation" id="toc-step-3-markers-quantify-separation" class="nav-link" data-scroll-target="#step-3-markers-quantify-separation">Step 3: Markers Quantify Separation</a></li>
   <li><a href="#when-the-chain-breaks" id="toc-when-the-chain-breaks" class="nav-link" data-scroll-target="#when-the-chain-breaks">When the Chain Breaks</a>
   <ul class="collapse">
-  <li><a href="#strong-markers-weak-structure" id="toc-strong-markers-weak-structure" class="nav-link" data-scroll-target="#strong-markers-weak-structure">1️⃣ Strong Markers, Weak Structure</a></li>
-  <li><a href="#clear-clusters-no-coherent-markers" id="toc-clear-clusters-no-coherent-markers" class="nav-link" data-scroll-target="#clear-clusters-no-coherent-markers">2️⃣ Clear Clusters, No Coherent Markers</a></li>
-  <li><a href="#qc-alignment-with-a-cluster" id="toc-qc-alignment-with-a-cluster" class="nav-link" data-scroll-target="#qc-alignment-with-a-cluster">3️⃣ QC Alignment With a Cluster</a></li>
+  <li><a href="#statistical-signal-without-geometric-coherence" id="toc-statistical-signal-without-geometric-coherence" class="nav-link" data-scroll-target="#statistical-signal-without-geometric-coherence">Statistical signal without geometric coherence</a></li>
+  <li><a href="#geometric-separation-without-stable-differential-expression" id="toc-geometric-separation-without-stable-differential-expression" class="nav-link" data-scroll-target="#geometric-separation-without-stable-differential-expression">Geometric separation without stable differential expression</a></li>
+  <li><a href="#qc-alignment-with-cluster-structure" id="toc-qc-alignment-with-cluster-structure" class="nav-link" data-scroll-target="#qc-alignment-with-cluster-structure">QC alignment with cluster structure</a></li>
   </ul></li>
-  <li><a href="#internal-consistency-increases-confidence" id="toc-internal-consistency-increases-confidence" class="nav-link" data-scroll-target="#internal-consistency-increases-confidence">Internal Consistency Increases Confidence</a></li>
-  <li><a href="#example-of-calibrated-language" id="toc-example-of-calibrated-language" class="nav-link" data-scroll-target="#example-of-calibrated-language">Example of Calibrated Language</a></li>
+  <li><a href="#calibration-questions-before-making-a-claim" id="toc-calibration-questions-before-making-a-claim" class="nav-link" data-scroll-target="#calibration-questions-before-making-a-claim">Calibration Questions Before Making a Claim</a></li>
+  <li><a href="#example-overconfident-vs-calibrated-language" id="toc-example-overconfident-vs-calibrated-language" class="nav-link" data-scroll-target="#example-overconfident-vs-calibrated-language">Example: Overconfident vs Calibrated Language</a></li>
   <li><a href="#what-this-free-track-established" id="toc-what-this-free-track-established" class="nav-link" data-scroll-target="#what-this-free-track-established">What This Free Track Established</a></li>
   <li><a href="#final-takeaway" id="toc-final-takeaway" class="nav-link" data-scroll-target="#final-takeaway">Final Takeaway</a></li>
   </ul>
@@ -195,171 +194,127 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="cdi-message">
 <ul>
-<li><strong>ID:</strong> SC-L06<br>
-</li>
-<li><strong>Type:</strong> Interpretation Framework<br>
-</li>
-<li><strong>Audience:</strong> Public<br>
-</li>
-<li><strong>Theme:</strong> Turning structure and markers into disciplined biological reasoning<br>
-</li>
+<li><strong>ID:</strong> SC-L06</li>
+<li><strong>Type:</strong> Interpretation Framework</li>
+<li><strong>Audience:</strong> Public</li>
+<li><strong>Theme:</strong> Turning structure and markers into disciplined biological reasoning</li>
 </ul>
 </div>
+<hr>
 <section id="why-this-lesson-matters" class="level2">
 <h2 class="anchored" data-anchor-id="why-this-lesson-matters">Why This Lesson Matters</h2>
-<p>By now we have:</p>
-<ul>
-<li>Performed QC</li>
-<li>Identified technical structure</li>
-<li>Reduced dimensionality</li>
-<li>Clustered cells</li>
-<li>Identified marker genes</li>
-</ul>
-<p>Many analyses stop here.</p>
-<p>But clustering plus markers is not biological truth.</p>
-<p>This lesson formalizes the reasoning discipline required before making biological claims.</p>
+<p>Across this free track, we have moved from raw counts to clusters and marker genes.</p>
+<p>Now we formalize the reasoning discipline that connects them.</p>
+<p>Clusters exist because selected variance was compressed into principal components.<br>
+Marker genes are the genes that dominate that compressed variance.</p>
+<p>Biological claims must be constrained by that logic.</p>
 <hr>
 </section>
 <section id="the-single-cell-interpretation-chain" class="level1">
 <h1>The Single-Cell Interpretation Chain</h1>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="06-from-clusters-to-calibrated-biological-claims_files/figure-html/reasoning-chain-diagram-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>This diagram is the discipline behind the workflow.</p>
-<p>Each step constrains what can be claimed next.</p>
-<p>If you skip a step, confidence inflates faster than evidence.</p>
+<p>QC Metrics<br>
+→ Selected Variance<br>
+→ Dimensional Compression (PCA)<br>
+→ Cluster Structure<br>
+→ Marker Quantification<br>
+→ Calibration Questions<br>
+→ Calibrated Biological Claim</p>
+<p>Each layer constrains the next.</p>
+<p>If one layer is unstable, downstream claims must narrow.</p>
 <hr>
 </section>
 <section id="step-1-qc-constrains-interpretation" class="level1">
 <h1>Step 1: QC Constrains Interpretation</h1>
-<p>From earlier lessons:</p>
+<p>Single-cell structure can reflect:</p>
 <ul>
-<li>percent_mt aligned with a principal component<br>
+<li>Biological heterogeneity<br>
 </li>
-<li>One cluster showed elevated mitochondrial signal</li>
+<li>Technical variation<br>
+</li>
+<li>Stress responses<br>
+</li>
+<li>Batch effects</li>
 </ul>
-<p>This means some structure may be technical.</p>
-<p>Before labeling a cluster, ask:</p>
-<p>Is this biology — or is this QC structure?</p>
-<p>If a cluster aligns with:</p>
-<ul>
-<li>High mitochondrial percentage<br>
-</li>
-<li>Extreme library size<br>
-</li>
-<li>Batch separation</li>
-</ul>
-<p>Then biological claims must be restricted.</p>
+<p>If mitochondrial percentage, library size, or batch align strongly with structure, then interpretation must be conservative.</p>
+<p>Structure is diagnostic.<br>
+It is not automatically biological.</p>
 <hr>
 </section>
-<section id="step-2-structure-precedes-meaning" class="level1">
-<h1>Step 2: Structure Precedes Meaning</h1>
-<p>PCA revealed separation.</p>
-<p>Clustering detected groups.</p>
-<p>But clustering answers only:</p>
-<p>Which cells are similar in reduced space?</p>
-<p>It does not answer:</p>
-<p>What biological identity they represent.</p>
-<p>Structure is geometry.<br>
-Biology is explanation.</p>
+<section id="step-2-structure-is-geometry" class="level1">
+<h1>Step 2: Structure Is Geometry</h1>
+<p>Dimensionality reduction compresses selected variance.</p>
+<p>Clusters represent regions of compressed variance space.</p>
+<p>They are geometric objects.</p>
+<p>They are not cell types.</p>
+<p>Cluster identity is a hypothesis that requires evidence.</p>
 <hr>
 </section>
-<section id="step-3-markers-provide-evidence-not-identity" class="level1">
-<h1>Step 3: Markers Provide Evidence, Not Identity</h1>
-<p>From the volcano analysis:</p>
+<section id="step-3-markers-quantify-separation" class="level1">
+<h1>Step 3: Markers Quantify Separation</h1>
+<p>Marker analysis does not discover new structure.</p>
+<p>It quantifies the separation already visible in PCA space.</p>
+<p>Strong markers show:</p>
 <ul>
-<li>Effect sizes aligned with statistical evidence<br>
+<li>Consistent expression difference<br>
 </li>
-<li>Signal survived multiple testing correction<br>
+<li>Statistically stable signal<br>
 </li>
-<li>Separation was coherent</li>
+<li>Alignment with cluster geometry</li>
 </ul>
-<p>This confirms transcriptional distinction.</p>
-<p>But distinction is not identity.</p>
-<p>Marker genes must be:</p>
-<ul>
-<li>Biologically coherent<br>
-</li>
-<li>Functionally interpretable<br>
-</li>
-<li>Consistent with known pathways<br>
-</li>
-<li>Evaluated in context</li>
-</ul>
-<p>Markers support claims.<br>
-They do not define them.</p>
-<hr>
-</section>
-<section id="step-4-calibration-questions" class="level1">
-<h1>Step 4: Calibration Questions</h1>
-<p>Before making a claim, ask:</p>
-<ol type="1">
-<li>Does the cluster align with QC metrics?</li>
-<li>Is separation driven by batch?</li>
-<li>Are markers biologically plausible?</li>
-<li>Are effects large and stable?</li>
-<li>Could this reflect activation state rather than cell type?</li>
-<li>Do multiple analytical layers agree?</li>
-</ol>
-<p>If answers are uncertain, the claim must be conservative.</p>
-<p>Calibration is not hesitation.<br>
-It is discipline.</p>
+<p>Markers are quantified variance.</p>
+<p>They measure how strongly certain genes contribute to separation.</p>
+<p>They do not assign biological meaning on their own.</p>
 <hr>
 </section>
 <section id="when-the-chain-breaks" class="level1">
 <h1>When the Chain Breaks</h1>
-<p>Not all analyses move cleanly through the chain.</p>
-<p>Three common failure modes:</p>
-<section id="strong-markers-weak-structure" class="level3">
-<h3 class="anchored" data-anchor-id="strong-markers-weak-structure">1️⃣ Strong Markers, Weak Structure</h3>
-<p>Markers appear significant, but PCA shows poor separation.<br>
-Signal may be unstable or overfitted.</p>
+<p>Not all analyses move cleanly through the reasoning chain.</p>
+<p>Common failure modes include:</p>
+<section id="statistical-signal-without-geometric-coherence" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-signal-without-geometric-coherence">Statistical signal without geometric coherence</h3>
+<p>Genes appear significant, but clusters are poorly separated in reduced space.<br>
+This may reflect noise or unstable modeling.</p>
 </section>
-<section id="clear-clusters-no-coherent-markers" class="level3">
-<h3 class="anchored" data-anchor-id="clear-clusters-no-coherent-markers">2️⃣ Clear Clusters, No Coherent Markers</h3>
-<p>Clusters exist geometrically, but differential genes are weak.<br>
-This may reflect gradients rather than discrete cell types.</p>
+<section id="geometric-separation-without-stable-differential-expression" class="level3">
+<h3 class="anchored" data-anchor-id="geometric-separation-without-stable-differential-expression">Geometric separation without stable differential expression</h3>
+<p>Clusters appear distinct, but marker genes lack statistical robustness.<br>
+This may reflect gradients rather than discrete populations.</p>
 </section>
-<section id="qc-alignment-with-a-cluster" class="level3">
-<h3 class="anchored" data-anchor-id="qc-alignment-with-a-cluster">3️⃣ QC Alignment With a Cluster</h3>
-<p>If a cluster strongly aligns with percent_mt or library size,<br>
-the “biology” may reflect stress or technical variation.</p>
+<section id="qc-alignment-with-cluster-structure" class="level3">
+<h3 class="anchored" data-anchor-id="qc-alignment-with-cluster-structure">QC alignment with cluster structure</h3>
+<p>If a cluster aligns strongly with technical metrics,<br>
+its markers may reflect stress or capture bias rather than biology.</p>
 <p>When layers disagree, confidence decreases.</p>
-<p>Calibration means slowing down when signals conflict.</p>
+<p>Calibration means slowing interpretation when signals conflict.</p>
 <hr>
 </section>
 </section>
-<section id="internal-consistency-increases-confidence" class="level1">
-<h1>Internal Consistency Increases Confidence</h1>
-<p>Strong analyses show alignment across layers:</p>
-<ul>
-<li>QC does not dominate structure<br>
-</li>
-<li>PCA separation is stable<br>
-</li>
-<li>Clusters are geometrically coherent<br>
-</li>
-<li>Marker genes are statistically strong<br>
-</li>
-<li>Biological interpretation is plausible</li>
-</ul>
-<p>When these agree, confidence increases.</p>
-<p>When they conflict, interpretation must narrow.</p>
+<section id="calibration-questions-before-making-a-claim" class="level1">
+<h1>Calibration Questions Before Making a Claim</h1>
+<p>Before labeling a cluster, ask:</p>
+<ol type="1">
+<li>Does structure align with QC metrics?</li>
+<li>Are markers statistically stable after correction?</li>
+<li>Do effect sizes match visual separation?</li>
+<li>Could this reflect activation state rather than cell identity?</li>
+<li>Do multiple analytical layers agree?</li>
+</ol>
+<p>If uncertainty remains, the claim must be narrower.</p>
+<p>Calibration is not hesitation.<br>
+It is methodological discipline.</p>
 <hr>
 </section>
-<section id="example-of-calibrated-language" class="level1">
-<h1>Example of Calibrated Language</h1>
-<p>Overconfident statement:</p>
+<section id="example-overconfident-vs-calibrated-language" class="level1">
+<h1>Example: Overconfident vs Calibrated Language</h1>
+<p>Overconfident:</p>
+<blockquote class="blockquote">
 <p>Cluster 1 represents activated immune cells.</p>
-<p>Calibrated statement:</p>
-<p>Cluster 1 shows strong transcriptional separation and marker enrichment consistent with an activated immune-like profile, though QC-driven stress effects cannot be fully excluded.</p>
-<p>The second statement respects uncertainty.</p>
+</blockquote>
+<p>Calibrated:</p>
+<blockquote class="blockquote">
+<p>Cluster 1 shows coherent transcriptional separation and marker enrichment consistent with an activated immune-like profile, though QC-driven stress effects cannot be fully excluded.</p>
+</blockquote>
+<p>The second statement respects uncertainty while remaining informative.</p>
 <p>That difference is scientific maturity.</p>
 <hr>
 </section>
@@ -367,15 +322,12 @@ the “biology” may reflect stress or technical variation.</p>
 <h1>What This Free Track Established</h1>
 <p>You have learned:</p>
 <ul>
-<li>How technical variation enters single-cell data<br>
-</li>
-<li>How structure emerges in reduced space<br>
-</li>
-<li>Why clusters are hypotheses<br>
-</li>
-<li>How markers quantify separation<br>
-</li>
-<li>How to calibrate biological claims</li>
+<li>How technical variation enters single-cell data</li>
+<li>How variance selection shapes embeddings</li>
+<li>How PCA compresses selected variance into structure</li>
+<li>How clustering reflects geometric similarity</li>
+<li>How marker genes quantify separation</li>
+<li>How biological claims must be calibrated</li>
 </ul>
 <p>This is not just a workflow.</p>
 <p>It is a reasoning framework.</p>
@@ -383,11 +335,9 @@ the “biology” may reflect stress or technical variation.</p>
 </section>
 <section id="final-takeaway" class="level1">
 <h1>Final Takeaway</h1>
-<p>Single-cell analysis does not fail because of tools.</p>
-<p>It fails when interpretation outruns calibration.</p>
-<p>A cluster is a pattern.<br>
-A marker is evidence.<br>
-A claim is a responsibility.</p>
+<p>Clusters are geometry.<br>
+Markers are quantified variance.<br>
+Claims require calibration.</p>
 <p>That is the difference between running code and doing science.</p>
 
 
@@ -795,8 +745,8 @@ A claim is a responsibility.</p>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./05-marker-genes-and-annotation.html" class="pagination-link" aria-label="Lesson 5: Marker Genes and Annotation Discipline">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Lesson 5: Marker Genes and Annotation Discipline</span></span>
+      <a href="./05-marker-genes-and-annotation.html" class="pagination-link" aria-label="Lesson 5: Marker Genes and Variance-Driven Separation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

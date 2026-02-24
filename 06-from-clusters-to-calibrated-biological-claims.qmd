@@ -1,235 +1,145 @@
 # Lesson 6: From Clusters to Calibrated Biological Claims
 
 :::cdi-message
-- **ID:** SC-L06  
-- **Type:** Interpretation Framework  
-- **Audience:** Public  
-- **Theme:** Turning structure and markers into disciplined biological reasoning  
+- **ID:** SC-L06
+- **Type:** Interpretation Framework
+- **Audience:** Public
+- **Theme:** Turning structure and markers into disciplined biological reasoning
 :::
+
+---
 
 ## Why This Lesson Matters
 
-By now we have:
+Across this free track, we have moved from raw counts to clusters and marker genes.
 
-- Performed QC
-- Identified technical structure
-- Reduced dimensionality
-- Clustered cells
-- Identified marker genes
+Now we formalize the reasoning discipline that connects them.
 
-Many analyses stop here.
+Clusters exist because selected variance was compressed into principal components.  
+Marker genes are the genes that dominate that compressed variance.
 
-But clustering plus markers is not biological truth.
-
-This lesson formalizes the reasoning discipline required before making biological claims.
+Biological claims must be constrained by that logic.
 
 ---
 
 # The Single-Cell Interpretation Chain
-```{r reasoning-chain-diagram, echo = FALSE}
-#| message: false
-#| warning: false
 
-source("scripts/R/cdi-plot-theme.R")
-library(ggplot2)
-library(grid)
+QC Metrics  
+→ Selected Variance  
+→ Dimensional Compression (PCA)  
+→ Cluster Structure  
+→ Marker Quantification  
+→ Calibration Questions  
+→ Calibrated Biological Claim  
 
-nodes <- data.frame(
-  label = c(
-    "QC Metrics",
-    "Dimensional\nStructure",
-    "Clusters",
-    "Marker\nGenes",
-    "Calibration\nQuestions",
-    "Calibrated\nBiological Claim"
-  ),
-  y = 6:1,
-  x = 1
-)
+Each layer constrains the next.
 
-edges <- data.frame(
-  x = 1, xend = 1,
-  y = 6:2, yend = 5:1
-)
-
-ggplot() +
-  geom_segment(
-    data = edges,
-    aes(x = x, y = y - 0.35, xend = xend, yend = yend + 0.35),
-    linewidth = 0.8,
-    arrow = arrow(length = unit(10, "pt"))
-  ) +
-  geom_label(
-    data = nodes[1:5, ],
-    aes(x = x, y = y, label = label),
-    label.size = 0.8,
-    label.padding = unit(0.6, "lines"),
-    fill = "#eef5ff"
-  ) +
-  geom_label(
-    data = nodes[6, ],
-    aes(x = x, y = y, label = label),
-    label.size = 0.8,
-    label.padding = unit(0.6, "lines"),
-    fill = "#036281",
-    color = "white",
-    fontface = "bold"
-  ) +
-  labs(
-    title = "Single-cell interpretation chain",
-    subtitle = "Each step constrains what can be claimed next"
-  ) +
-  coord_cartesian(xlim = c(0.5, 1.5), ylim = c(0.5, 6.5), expand = FALSE) +
-  theme_void(base_size = 12) +
-  theme(
-    plot.title = element_text(hjust = 0.5, face = "bold"),
-    plot.subtitle = element_text(hjust = 0.5)
-  )
-```
-
-This diagram is the discipline behind the workflow.
-
-Each step constrains what can be claimed next.
-
-If you skip a step, confidence inflates faster than evidence.
+If one layer is unstable, downstream claims must narrow.
 
 ---
 
 # Step 1: QC Constrains Interpretation
 
-From earlier lessons:
+Single-cell structure can reflect:
 
-- percent_mt aligned with a principal component  
-- One cluster showed elevated mitochondrial signal  
+- Biological heterogeneity  
+- Technical variation  
+- Stress responses  
+- Batch effects  
 
-This means some structure may be technical.
+If mitochondrial percentage, library size, or batch align strongly with structure, then interpretation must be conservative.
 
-Before labeling a cluster, ask:
-
-Is this biology — or is this QC structure?
-
-If a cluster aligns with:
-
-- High mitochondrial percentage  
-- Extreme library size  
-- Batch separation  
-
-Then biological claims must be restricted.
+Structure is diagnostic.  
+It is not automatically biological.
 
 ---
 
-# Step 2: Structure Precedes Meaning
+# Step 2: Structure Is Geometry
 
-PCA revealed separation.
+Dimensionality reduction compresses selected variance.
 
-Clustering detected groups.
+Clusters represent regions of compressed variance space.
 
-But clustering answers only:
+They are geometric objects.
 
-Which cells are similar in reduced space?
+They are not cell types.
 
-It does not answer:
-
-What biological identity they represent.
-
-Structure is geometry.  
-Biology is explanation.
+Cluster identity is a hypothesis that requires evidence.
 
 ---
 
-# Step 3: Markers Provide Evidence, Not Identity
+# Step 3: Markers Quantify Separation
 
-From the volcano analysis:
+Marker analysis does not discover new structure.
 
-- Effect sizes aligned with statistical evidence  
-- Signal survived multiple testing correction  
-- Separation was coherent  
+It quantifies the separation already visible in PCA space.
 
-This confirms transcriptional distinction.
+Strong markers show:
 
-But distinction is not identity.
+- Consistent expression difference  
+- Statistically stable signal  
+- Alignment with cluster geometry  
 
-Marker genes must be:
+Markers are quantified variance.
 
-- Biologically coherent  
-- Functionally interpretable  
-- Consistent with known pathways  
-- Evaluated in context  
+They measure how strongly certain genes contribute to separation.
 
-Markers support claims.  
-They do not define them.
-
----
-
-# Step 4: Calibration Questions
-
-Before making a claim, ask:
-
-1. Does the cluster align with QC metrics?
-2. Is separation driven by batch?
-3. Are markers biologically plausible?
-4. Are effects large and stable?
-5. Could this reflect activation state rather than cell type?
-6. Do multiple analytical layers agree?
-
-If answers are uncertain, the claim must be conservative.
-
-Calibration is not hesitation.  
-It is discipline.
+They do not assign biological meaning on their own.
 
 ---
 
 # When the Chain Breaks
 
-Not all analyses move cleanly through the chain.
+Not all analyses move cleanly through the reasoning chain.
 
-Three common failure modes:
+Common failure modes include:
 
-### 1️⃣ Strong Markers, Weak Structure  
-Markers appear significant, but PCA shows poor separation.  
-Signal may be unstable or overfitted.
+### Statistical signal without geometric coherence
+Genes appear significant, but clusters are poorly separated in reduced space.  
+This may reflect noise or unstable modeling.
 
-### 2️⃣ Clear Clusters, No Coherent Markers  
-Clusters exist geometrically, but differential genes are weak.  
-This may reflect gradients rather than discrete cell types.
+### Geometric separation without stable differential expression
+Clusters appear distinct, but marker genes lack statistical robustness.  
+This may reflect gradients rather than discrete populations.
 
-### 3️⃣ QC Alignment With a Cluster  
-If a cluster strongly aligns with percent_mt or library size,  
-the “biology” may reflect stress or technical variation.
+### QC alignment with cluster structure
+If a cluster aligns strongly with technical metrics,  
+its markers may reflect stress or capture bias rather than biology.
 
 When layers disagree, confidence decreases.
 
-Calibration means slowing down when signals conflict.
+Calibration means slowing interpretation when signals conflict.
 
 ---
 
-# Internal Consistency Increases Confidence
+# Calibration Questions Before Making a Claim
 
-Strong analyses show alignment across layers:
+Before labeling a cluster, ask:
 
-- QC does not dominate structure  
-- PCA separation is stable  
-- Clusters are geometrically coherent  
-- Marker genes are statistically strong  
-- Biological interpretation is plausible  
+1. Does structure align with QC metrics?
+2. Are markers statistically stable after correction?
+3. Do effect sizes match visual separation?
+4. Could this reflect activation state rather than cell identity?
+5. Do multiple analytical layers agree?
 
-When these agree, confidence increases.
+If uncertainty remains, the claim must be narrower.
 
-When they conflict, interpretation must narrow.
+Calibration is not hesitation.  
+It is methodological discipline.
 
 ---
 
-# Example of Calibrated Language
+# Example: Overconfident vs Calibrated Language
 
-Overconfident statement:
+Overconfident:
 
-Cluster 1 represents activated immune cells.
+> Cluster 1 represents activated immune cells.
 
-Calibrated statement:
+Calibrated:
 
-Cluster 1 shows strong transcriptional separation and marker enrichment consistent with an activated immune-like profile, though QC-driven stress effects cannot be fully excluded.
+> Cluster 1 shows coherent transcriptional separation and marker enrichment consistent with an activated immune-like profile, though QC-driven stress effects cannot be fully excluded.
 
-The second statement respects uncertainty.
+The second statement respects uncertainty while remaining informative.
 
 That difference is scientific maturity.
 
@@ -239,11 +149,12 @@ That difference is scientific maturity.
 
 You have learned:
 
-- How technical variation enters single-cell data  
-- How structure emerges in reduced space  
-- Why clusters are hypotheses  
-- How markers quantify separation  
-- How to calibrate biological claims  
+- How technical variation enters single-cell data
+- How variance selection shapes embeddings
+- How PCA compresses selected variance into structure
+- How clustering reflects geometric similarity
+- How marker genes quantify separation
+- How biological claims must be calibrated
 
 This is not just a workflow.
 
@@ -253,12 +164,8 @@ It is a reasoning framework.
 
 # Final Takeaway
 
-Single-cell analysis does not fail because of tools.
-
-It fails when interpretation outruns calibration.
-
-A cluster is a pattern.  
-A marker is evidence.  
-A claim is a responsibility.
+Clusters are geometry.  
+Markers are quantified variance.  
+Claims require calibration.
 
 That is the difference between running code and doing science.
