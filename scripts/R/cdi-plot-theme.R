@@ -13,7 +13,7 @@ cdi_palette <- function(){
   )
 }
 
-cdi_theme <- function(base_size = 12){
+cdi_theme <- function(base_size = 14){
   pal <- cdi_palette()
 
   ggplot2::theme_light(base_size = base_size) +
@@ -31,7 +31,18 @@ cdi_theme <- function(base_size = 12){
       axis.text = ggplot2::element_text(color = pal$ink),
 
       legend.title = ggplot2::element_text(face = "bold", color = pal$ink),
-      legend.position = "top"
+      legend.position = "top",
+
+      # ---- NEW STRIP STYLING ----
+      strip.background = ggplot2::element_rect(
+        fill = pal$ink,
+        color = pal$grid,
+        linewidth = 0.6
+      ),
+      strip.text = ggplot2::element_text(
+        face = "bold",
+        color = pal$ink
+      )
     )
 }
 

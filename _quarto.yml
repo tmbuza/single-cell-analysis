@@ -4,6 +4,7 @@ project:
 
 book:
   title: "Single-Cell Analysis"
+  subtitle: "From Cellular Heterogeneity to Interpretable Biological Structure"
   chapters:
     - index.qmd
     - 01-preface-and-setup.qmd
