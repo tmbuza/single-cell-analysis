@@ -35,7 +35,7 @@ cdi_theme <- function(base_size = 14){
 
       # ---- NEW STRIP STYLING ----
       strip.background = ggplot2::element_rect(
-        fill = pal$ink,
+        fill = pal$panel,
         color = pal$grid,
         linewidth = 0.6
       ),
