@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lesson 5: Marker Genes and Variance-Driven Separation – Single-Cell Analysis</title>
+<title>Marker Genes and Variance-Driven Separation – Single-Cell Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -118,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html">Interpretation &amp; Biological Claims</a></li><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html"><span class="chapter-title">Marker Genes and Variance-Driven Separation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -148,36 +148,80 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">index.html</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Foundations &amp; Data Structure</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-preface-and-setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 1: Preface and Setup</span></a>
+  <a href="./01-preface-and-setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Preface and Setup</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./02-data-structure-and-qc-metrics.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 2: Data Structure and QC Metrics</span></a>
+  <a href="./02-data-structure-and-qc-metrics.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Data Structure and QC Metrics</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Preprocessing &amp; Feature Selection</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./03-normalization-and-feature-selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 3: Normalization and Feature Selection</span></a>
+  <a href="./03-normalization-and-feature-selection.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Normalization and Feature Selection</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Structure and Clustering</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-dimensionality-reduction-and-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 4: Dimensionality Reduction and Clustering</span></a>
+  <a href="./04-dimensionality-reduction-and-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Dimensionality Reduction and Clustering</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Interpretation &amp; Biological Claims</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></a>
+  <a href="./05-marker-genes-and-annotation.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Marker Genes and Variance-Driven Separation</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-from-clusters-to-calibrated-biological-claims.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Lesson 6: From Clusters to Calibrated Biological Claims</span></a>
+  <a href="./06-from-clusters-to-calibrated-biological-claims.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">From Clusters to Calibrated Biological Claims</span></a>
   </div>
 </li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -204,9 +248,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html">Interpretation &amp; Biological Claims</a></li><li class="breadcrumb-item"><a href="./05-marker-genes-and-annotation.html"><span class="chapter-title">Marker Genes and Variance-Driven Separation</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">Lesson 5: Marker Genes and Variance-Driven Separation</span></h1>
+<h1 class="title"><span class="chapter-title">Marker Genes and Variance-Driven Separation</span></h1>
 </div>
 
 
@@ -310,14 +354,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(log_counts))) {</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  g1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(log_counts[i, group1])</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  g2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(log_counts[i, group2])</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  marker_results<span class="sc">$</span>logFC[i] <span class="ot">&lt;-</span> <span class="fu">mean</span>(g1) <span class="sc">-</span> <span class="fu">mean</span>(g2)</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  tt <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>(</span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">suppressWarnings</span>(<span class="fu">t.test</span>(g1, g2)),</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">NULL</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  marker_results<span class="sc">$</span>pvalue[i] <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.null</span>(tt)) <span class="cn">NA_real_</span> <span class="cf">else</span> tt<span class="sc">$</span>p.value</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
@@ -349,7 +393,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="05-marker-genes-and-annotation_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="05-marker-genes-and-annotation_files/figure-html/volcano-plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -798,13 +842,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./04-dimensionality-reduction-and-clustering.html" class="pagination-link" aria-label="Lesson 4: Dimensionality Reduction and Clustering">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Lesson 4: Dimensionality Reduction and Clustering</span></span>
+      <a href="./04-dimensionality-reduction-and-clustering.html" class="pagination-link" aria-label="Dimensionality Reduction and Clustering">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Dimensionality Reduction and Clustering</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06-from-clusters-to-calibrated-biological-claims.html" class="pagination-link" aria-label="Lesson 6: From Clusters to Calibrated Biological Claims">
-        <span class="nav-page-text"><span class="chapter-title">Lesson 6: From Clusters to Calibrated Biological Claims</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./06-from-clusters-to-calibrated-biological-claims.html" class="pagination-link" aria-label="From Clusters to Calibrated Biological Claims">
+        <span class="nav-page-text"><span class="chapter-title">From Clusters to Calibrated Biological Claims</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -1,4 +1,4 @@
-# Lesson 2: Data Structure and QC Metrics
+# Data Structure and QC Metrics
 
 :::cdi-message
 - **ID:** SC-L02

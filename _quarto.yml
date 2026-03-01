@@ -5,14 +5,27 @@ project:
 book:
   title: "Single-Cell Analysis"
   subtitle: "From Cellular Heterogeneity to Interpretable Biological Structure"
+
   chapters:
     - index.qmd
-    - 01-preface-and-setup.qmd
-    - 02-data-structure-and-qc-metrics.qmd
-    - 03-normalization-and-feature-selection.qmd
-    - 04-dimensionality-reduction-and-clustering.qmd
-    - 05-marker-genes-and-annotation.qmd
-    - 06-from-clusters-to-calibrated-biological-claims.qmd
+
+    - part: "Foundations & Data Structure"
+      chapters:
+        - 01-preface-and-setup.qmd
+        - 02-data-structure-and-qc-metrics.qmd
+
+    - part: "Preprocessing & Feature Selection"
+      chapters:
+        - 03-normalization-and-feature-selection.qmd
+
+    - part: "Structure and Clustering"
+      chapters:
+        - 04-dimensionality-reduction-and-clustering.qmd
+
+    - part: "Interpretation & Biological Claims"
+      chapters:
+        - 05-marker-genes-and-annotation.qmd
+        - 06-from-clusters-to-calibrated-biological-claims.qmd
 
 format:
   html:

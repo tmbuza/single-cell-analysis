@@ -1,5 +1,4 @@
-
-# Lesson 5: Marker Genes and Variance-Driven Separation
+# Marker Genes and Variance-Driven Separation
 
 :::cdi-message
 - **ID:** SC-L05
@@ -30,7 +29,7 @@ They explain the variance that created them.
 
 # Load Data and Recompute Structure
 
-```{r}
+```{r load-data}
 #| message: false
 #| warning: false
 
@@ -85,7 +84,7 @@ Markers quantify the structure created by selected variance.
 
 # Differential Expression: Cluster 1 vs Others
 
-```{r}
+```{r marker-testing}
 #| message: false
 #| warning: false
 
@@ -103,14 +102,14 @@ marker_results <- data.frame(
 for (i in seq_len(nrow(log_counts))) {
   g1 <- as.numeric(log_counts[i, group1])
   g2 <- as.numeric(log_counts[i, group2])
-  
+
   marker_results$logFC[i] <- mean(g1) - mean(g2)
-  
+
   tt <- tryCatch(
     suppressWarnings(t.test(g1, g2)),
     error = function(e) NULL
   )
-  
+
   marker_results$pvalue[i] <- if (is.null(tt)) NA_real_ else tt$p.value
 }
 
@@ -122,7 +121,7 @@ marker_results$significant <- !is.na(marker_results$padj) & marker_results$padj 
 
 # Volcano Plot: Quantifying Separation
 
-```{r}
+```{r volcano-plot}
 #| message: false
 #| warning: false
 

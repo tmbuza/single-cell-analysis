@@ -1,4 +1,4 @@
-# Lesson 6: From Clusters to Calibrated Biological Claims
+# From Clusters to Calibrated Biological Claims
 
 :::cdi-message
 - **ID:** SC-L06

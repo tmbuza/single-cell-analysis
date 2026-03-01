@@ -1,5 +1,4 @@
-
-# Lesson 4: Dimensionality Reduction and Clustering
+# Dimensionality Reduction and Clustering
 
 :::cdi-message
 - **ID:** SC-L04
@@ -27,7 +26,7 @@ It compresses variance into interpretable axes.
 
 # Load Data and Recompute Variable Genes
 
-```{r}
+```{r load-data}
 #| message: false
 #| warning: false
 
@@ -57,7 +56,7 @@ variable_genes <- rownames(log_counts)[var_order[1:200]]
 
 # Principal Component Analysis
 
-```{r}
+```{r pca}
 #| message: false
 #| warning: false
 
@@ -79,7 +78,7 @@ summary(pca_res)$importance[2, 1:5]
 
 # PCA Colored by Mitochondrial Percentage
 
-```{r}
+```{r pca-mito-plot}
 ggplot(pca_df, aes(x = PC1, y = PC2, color = percent_mt)) +
   geom_point(size = 2.2, alpha = 0.85) +
   scale_color_viridis_c(option = "viridis") +
@@ -106,7 +105,7 @@ Structure is diagnostic, not automatically biological.
 
 # PCA Colored by Batch
 
-```{r}
+```{r pca-batch-plot}
 ggplot(pca_df, aes(x = PC1, y = PC2, color = batch)) +
   geom_point(size = 2.2, alpha = 0.85) +
   labs(
@@ -132,7 +131,7 @@ Structure alone cannot resolve this.
 
 # Clustering in Reduced Space
 
-```{r}
+```{r clustering}
 set.seed(123)
 clusters <- kmeans(pca_res$x[, 1:2], centers = 3)$cluster
 pca_df$cluster <- factor(clusters)
@@ -142,7 +141,7 @@ pca_df$cluster <- factor(clusters)
 
 # PCA with Cluster Assignments
 
-```{r}
+```{r pca-cluster-plot}
 ggplot(pca_df, aes(x = PC1, y = PC2, color = cluster)) +
   geom_point(size = 2.2, alpha = 0.9) +
   labs(
@@ -165,7 +164,7 @@ They are the compression of selected variance, not biological labels.
 
 # Mitochondrial Percentage by Cluster
 
-```{r}
+```{r mito-by-cluster}
 ggplot(pca_df, aes(x = cluster, y = percent_mt, fill = cluster)) +
   geom_boxplot(alpha = 0.8) +
   labs(

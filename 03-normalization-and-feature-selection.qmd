@@ -1,4 +1,4 @@
-# Lesson 3: Normalization and Feature Selection
+# Normalization and Feature Selection
 
 :::cdi-message
 - **ID:** SC-L03
