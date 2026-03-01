@@ -1,0 +1,419 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Single-Cell Analysis",
+    "section": "",
+    "text": "Free Guide · Updated Mar 2026",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>index.html</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html",
+    "href": "01-preface-and-setup.html",
+    "title": "Preface and Setup",
+    "section": "",
+    "text": "What This Guide Is\nSingle-cell RNA-seq analysis is often described as a sequence of steps:\nQC → normalization → PCA or UMAP → clustering → markers → annotation\nMost confusion does not come from running those steps. It comes from interpreting what they mean and what they do not mean.\nThis free guide is designed to build disciplined reasoning.\nYou will learn to:",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#what-this-guide-is",
+    "href": "01-preface-and-setup.html#what-this-guide-is",
+    "title": "Preface and Setup",
+    "section": "",
+    "text": "Understand the data objects (counts and metadata)\nApply QC with explicit thresholds and tradeoffs\nInterpret embeddings and clusters carefully\nTreat marker-based labels as hypotheses, not conclusions\nTranslate results into calibrated biological claims",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#what-this-guide-is-not",
+    "href": "01-preface-and-setup.html#what-this-guide-is-not",
+    "title": "Preface and Setup",
+    "section": "What This Guide Is Not",
+    "text": "What This Guide Is Not\nThis guide is not:\n\nA benchmark of tools\nA promise that clustering equals cell types\nA replacement for replication and validation\n\nIt is a structured foundation that makes downstream choices easier to defend.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#the-reasoning-chain",
+    "href": "01-preface-and-setup.html#the-reasoning-chain",
+    "title": "Preface and Setup",
+    "section": "The Reasoning Chain",
+    "text": "The Reasoning Chain\nWe follow a reasoning chain that mirrors how interpretation should happen in practice:\nData structure → QC metrics → normalization choices → structure (PCA or UMAP) → clustering → marker evidence → calibrated claim\nEach lesson adds one layer. Later layers do not override earlier ones.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#required-software",
+    "href": "01-preface-and-setup.html#required-software",
+    "title": "Preface and Setup",
+    "section": "Required Software",
+    "text": "Required Software\nThis free track is R-centric.\nYou need:\n\nR (recent version)\nQuarto\nA few R packages for plotting and basic manipulation\n\nIf you are using RStudio, both Quarto rendering and R execution work well.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#project-structure",
+    "href": "01-preface-and-setup.html#project-structure",
+    "title": "Preface and Setup",
+    "section": "Project Structure",
+    "text": "Project Structure\nKey folders in this repository:\n\nindex.qmd: cover page only\n01-*.qmd to 06-*.qmd: lesson chapters\nscripts/R/: helper scripts (global plot theme and demo data generator)\ndata/: small demo datasets created locally\ndocs/: rendered site output (Quarto book)\n\nThe build is configured to output into docs/.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#global-cdi-plot-theme",
+    "href": "01-preface-and-setup.html#global-cdi-plot-theme",
+    "title": "Preface and Setup",
+    "section": "Global CDI Plot Theme",
+    "text": "Global CDI Plot Theme\nThis guide uses a global plotting theme so visuals stay consistent across domains.\nThe theme lives here:\n\nscripts/R/cdi-plot-theme.R\n\nYou will source it at the top of lessons that generate plots.\n\nsource(\"scripts/R/cdi-plot-theme.R\")",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#install-packages",
+    "href": "01-preface-and-setup.html#install-packages",
+    "title": "Preface and Setup",
+    "section": "Install Packages",
+    "text": "Install Packages\nInstall packages once.\n\ninstall.packages(c(\"ggplot2\", \"dplyr\", \"tidyr\", \"readr\"))\n\nThen load them in lessons when needed.\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(tidyr)\nlibrary(readr)",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#generate-the-demo-data",
+    "href": "01-preface-and-setup.html#generate-the-demo-data",
+    "title": "Preface and Setup",
+    "section": "Generate the Demo Data",
+    "text": "Generate the Demo Data\nThe free track uses small simulated data so the workflow is reproducible and fast.\nRun the generator script once from the project root.\n\nsource(\"scripts/R/cdi-single-cell-simulate-data.R\")\n\nThis will create:\n\ndata/demo-counts.csv\ndata/demo-metadata.csv\n\nIf those files already exist, you can keep them. Regenerating is fine as long as you accept that random simulation changes the numbers.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#render-the-book",
+    "href": "01-preface-and-setup.html#render-the-book",
+    "title": "Preface and Setup",
+    "section": "Render the Book",
+    "text": "Render the Book\nFrom the project root, render with Quarto:\nquarto render\nIf you want to render a single chapter during editing:\nquarto render 01-preface-and-setup.qmd",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#how-to-use-this-free-track",
+    "href": "01-preface-and-setup.html#how-to-use-this-free-track",
+    "title": "Preface and Setup",
+    "section": "How to Use This Free Track",
+    "text": "How to Use This Free Track\nA practical way to move through the guide:\n\nRead the concept sections\nRun the code\nCompare your output to the interpretation notes\nKeep a short log of decisions (QC thresholds, normalization method, clustering resolution)\n\nThis makes your results easier to explain and easier to reproduce.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "01-preface-and-setup.html#interpretation-discipline",
+    "href": "01-preface-and-setup.html#interpretation-discipline",
+    "title": "Preface and Setup",
+    "section": "Interpretation Discipline",
+    "text": "Interpretation Discipline\nSingle-cell analysis is vulnerable to over-interpretation because:\n\nCells are not independent biological replicates\nClusters are algorithmic groupings, not ground truth\nMarker genes can be shared across states\nBatch effects can look like biology\n\nThis guide will repeatedly separate:\n\nWhat the analysis shows\nWhat the analysis suggests\nWhat the analysis cannot prove\n\nThat separation is the core skill.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Preface and Setup</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html",
+    "href": "02-data-structure-and-qc-metrics.html",
+    "title": "Data Structure and QC Metrics",
+    "section": "",
+    "text": "Why Structure Comes First\nSingle-cell analysis does not begin with UMAP.\nIt begins with understanding:\nIf structure is misunderstood, every downstream result becomes fragile.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#why-structure-comes-first",
+    "href": "02-data-structure-and-qc-metrics.html#why-structure-comes-first",
+    "title": "Data Structure and QC Metrics",
+    "section": "",
+    "text": "What rows represent (genes)\nWhat columns represent (cells)\nHow metadata aligns with the count matrix\nWhat QC metrics measure",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#load-required-libraries",
+    "href": "02-data-structure-and-qc-metrics.html#load-required-libraries",
+    "title": "Data Structure and QC Metrics",
+    "section": "Load Required Libraries",
+    "text": "Load Required Libraries\n\nsource(\"scripts/R/cdi-plot-theme.R\")\n\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(readr)",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#load-demo-data",
+    "href": "02-data-structure-and-qc-metrics.html#load-demo-data",
+    "title": "Data Structure and QC Metrics",
+    "section": "Load Demo Data",
+    "text": "Load Demo Data\nMake sure you have already generated the demo data:\nsource(\"scripts/R/cdi-single-cell-simulate-data.R\")\nNow load the files.\n\ncounts &lt;- read.csv(\"data/demo-counts.csv\", row.names = 1)\nmetadata &lt;- read.csv(\"data/demo-metadata.csv\", stringsAsFactors = FALSE)\n\ndim(counts)\n\n[1] 500 300\n\ndim(metadata)\n\n[1] 300   6",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#inspect-the-counts-matrix",
+    "href": "02-data-structure-and-qc-metrics.html#inspect-the-counts-matrix",
+    "title": "Data Structure and QC Metrics",
+    "section": "Inspect the Counts Matrix",
+    "text": "Inspect the Counts Matrix\n\ncounts[1:5, 1:5]\n\n         Cell1 Cell2 Cell3 Cell4 Cell5\nMT-Gene1     4     0     0     8     0\nMT-Gene2     7     0     1     6     0\nMT-Gene3     6     0     0     5     0\nMT-Gene4     8     0     2     1     1\nMT-Gene5     7     0     2     2     1\n\n\nInterpretation:\n\nRows are genes.\nColumns are cells.\nValues are raw counts.\nCounts are not normalized.\nCounts are not comparable across cells yet.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#inspect-metadata",
+    "href": "02-data-structure-and-qc-metrics.html#inspect-metadata",
+    "title": "Data Structure and QC Metrics",
+    "section": "Inspect Metadata",
+    "text": "Inspect Metadata\n\nhead(metadata)\n\n  cell_id cell_type_truth  batch nCount_RNA nFeature_RNA percent_mt\n1   Cell1           Type1 Batch1        615          319  18.536585\n2   Cell2           Type2 Batch1        623          328   2.568218\n3   Cell3           Type3 Batch1        628          335   2.547771\n4   Cell4           Type1 Batch1        627          335  14.832536\n5   Cell5           Type2 Batch1        613          314   2.283850\n6   Cell6           Type3 Batch1        621          338   2.737520\n\nstr(metadata)\n\n'data.frame':   300 obs. of  6 variables:\n $ cell_id        : chr  \"Cell1\" \"Cell2\" \"Cell3\" \"Cell4\" ...\n $ cell_type_truth: chr  \"Type1\" \"Type2\" \"Type3\" \"Type1\" ...\n $ batch          : chr  \"Batch1\" \"Batch1\" \"Batch1\" \"Batch1\" ...\n $ nCount_RNA     : int  615 623 628 627 613 621 622 629 598 600 ...\n $ nFeature_RNA   : int  319 328 335 335 314 338 325 324 321 331 ...\n $ percent_mt     : num  18.54 2.57 2.55 14.83 2.28 ...\n\n\nKey QC metrics:\n\nnCount_RNA: total counts per cell\nnFeature_RNA: number of detected genes\npercent_mt: proportion of mitochondrial counts",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#alignment-check",
+    "href": "02-data-structure-and-qc-metrics.html#alignment-check",
+    "title": "Data Structure and QC Metrics",
+    "section": "Alignment Check",
+    "text": "Alignment Check\nCounts columns must match metadata cell IDs.\n\nall(colnames(counts) == metadata$cell_id)\n\n[1] TRUE\n\n\nIf FALSE, alignment must be fixed before proceeding.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#distribution-of-total-counts-ncount_rna",
+    "href": "02-data-structure-and-qc-metrics.html#distribution-of-total-counts-ncount_rna",
+    "title": "Data Structure and QC Metrics",
+    "section": "Distribution of Total Counts (nCount_RNA)",
+    "text": "Distribution of Total Counts (nCount_RNA)\n\nggplot(metadata, aes(x = nCount_RNA)) +\n  cdi_geom_histogram(bins = 40, colored = TRUE) +\n  cdi_scale_histogram_fill() +\n  labs(\n    title = \"Distribution of total counts per cell\",\n    subtitle = \"Cells with extremely low counts may be poor quality\",\n    x = \"nCount_RNA\",\n    y = \"Number of cells\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\nImproved Interpretation:\nMost cells fall within a relatively narrow range of total counts.\nThere is no cluster of extremely low-count cells, which reduces the likelihood of empty droplets.\nA modest right tail exists. This could represent: - Cells with genuinely higher RNA content - Potential doublets (two cells captured together)\nAt this stage, there is no justification to remove cells purely based on nCount_RNA.\nQC thresholds should not be applied simply because they are common in tutorials.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#distribution-of-detected-genes-nfeature_rna",
+    "href": "02-data-structure-and-qc-metrics.html#distribution-of-detected-genes-nfeature_rna",
+    "title": "Data Structure and QC Metrics",
+    "section": "Distribution of Detected Genes (nFeature_RNA)",
+    "text": "Distribution of Detected Genes (nFeature_RNA)\n\nggplot(metadata, aes(x = nFeature_RNA)) +\n  cdi_geom_histogram(bins = 40, colored = TRUE) +\n  cdi_scale_histogram_fill() +\n  labs(\n    title = \"Distribution of detected genes per cell\",\n    subtitle = \"Low-feature cells are often low quality\",\n    x = \"nFeature_RNA\",\n    y = \"Number of cells\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\nImproved Interpretation:\nThe distribution is narrow and largely unimodal.\nThere is no obvious subpopulation of extremely low-feature cells.\nThis suggests that technical dropout is not dominating the dataset.\nHigher-feature cells could reflect: - Larger or more transcriptionally active cells - Doublets - Or specific biological states\nAgain, no immediate filtering decision is justified.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#mitochondrial-percentage-percent_mt",
+    "href": "02-data-structure-and-qc-metrics.html#mitochondrial-percentage-percent_mt",
+    "title": "Data Structure and QC Metrics",
+    "section": "Mitochondrial Percentage (percent_mt)",
+    "text": "Mitochondrial Percentage (percent_mt)\n\nggplot(metadata, aes(x = percent_mt)) +\n  cdi_geom_histogram(bins = 40, colored = TRUE) +\n  cdi_scale_histogram_fill() +\n  labs(\n    title = \"Mitochondrial percentage per cell\",\n    subtitle = \"High mitochondrial proportion may indicate stressed or dying cells\",\n    x = \"percent_mt\",\n    y = \"Number of cells\"\n  ) +\n  cdi_theme()\n\n\n\n\n\n\n\n\nImproved Interpretation:\nThe mitochondrial percentage shows clear bimodality.\nOne group of cells has low mitochondrial content (~2–4%), while another shows substantially higher values (~14–18%).\nThis pattern suggests: - Either a stressed cell subpopulation - Or a batch-driven difference\nBefore filtering, we must check:\n\nIs high percent_mt enriched in one batch?\nDoes removing these cells remove a biological cluster?\nAre these cells coherent in downstream PCA space?\n\nBlindly applying a “5% mitochondrial cutoff” would eliminate an entire subpopulation.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#qc-decisions-should-be-tested",
+    "href": "02-data-structure-and-qc-metrics.html#qc-decisions-should-be-tested",
+    "title": "Data Structure and QC Metrics",
+    "section": "QC Decisions Should Be Tested",
+    "text": "QC Decisions Should Be Tested\nQC filtering is a hypothesis.\nBefore applying thresholds, test whether:\n\nHigh percent_mt cells cluster together\nThey are enriched in a specific batch\nThey align with a specific cell type\n\nIf filtering removes a coherent biological signal, it may be inappropriate.\nQC is not about cleaning data until it looks nice.\nIt is about controlling technical noise while preserving biological structure.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "02-data-structure-and-qc-metrics.html#what-this-lesson-established",
+    "href": "02-data-structure-and-qc-metrics.html#what-this-lesson-established",
+    "title": "Data Structure and QC Metrics",
+    "section": "What This Lesson Established",
+    "text": "What This Lesson Established\nYou now understand:\n\nThe structure of a single-cell count matrix\nThe role of metadata\nCore QC metrics\nWhy QC thresholds require reasoning, not memorization\n\nNext, we move to normalization and feature selection.",
+    "crumbs": [
+      "Foundations & Data Structure",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Data Structure and QC Metrics</span>"
+    ]
+  },
+  {
+    "objectID": "03-normalization-and-feature-selection.html",
+    "href": "03-normalization-and-feature-selection.html",
+    "title": "Normalization and Feature Selection",
+    "section": "",
+    "text": "Why This Lesson Matters\nRaw single-cell counts are not directly comparable across cells.\nCells differ in:\nIf we reduce dimensions without normalization, PCA may primarily capture total counts rather than biology.\nNormalization determines what structure is allowed to emerge.\nFeature selection determines which genes are allowed to shape that structure.",
+    "crumbs": [
+      "Preprocessing & Feature Selection",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Normalization and Feature Selection</span>"
+    ]
+  },
+  {
+    "objectID": "03-normalization-and-feature-selection.html#why-this-lesson-matters",
+    "href": "03-normalization-and-feature-selection.html#why-this-lesson-matters",
+    "title": "Normalization and Feature Selection",
+    "section": "",
+    "text": "Sequencing depth\n\nCapture efficiency\n\nLibrary size",
+    "crumbs": [
+      "Preprocessing & Feature Selection",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Normalization and Feature Selection</span>"
+    ]
+  },
+  {
+    "objectID": "03-normalization-and-feature-selection.html#interpretation-1",
+    "href": "03-normalization-and-feature-selection.html#interpretation-1",
+    "title": "Normalization and Feature Selection",
+    "section": "Interpretation",
+    "text": "Interpretation\nTwo key patterns emerge:\n\nVariance increases with mean expression.\nA subset of genes exhibits substantially higher variance.\n\nThese high-variance genes are most likely to drive:\n\nPrincipal component separation\n\nCluster formation\n\nMarker gene detection\n\nLow-variance genes contribute relatively little to structure.\nPCA does not discover structure — it amplifies variance.\nFeature selection determines which variance is amplified.",
+    "crumbs": [
+      "Preprocessing & Feature Selection",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Normalization and Feature Selection</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html",
+    "href": "04-dimensionality-reduction-and-clustering.html",
+    "title": "Dimensionality Reduction and Clustering",
+    "section": "",
+    "text": "Why This Lesson Matters\nIn Lesson 3, we learned:\nNow we allow that selected variance to define structure.\nDimensionality reduction does not create biology.\nIt compresses variance into interpretable axes.",
+    "crumbs": [
+      "Structure and Clustering",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#why-this-lesson-matters",
+    "href": "04-dimensionality-reduction-and-clustering.html#why-this-lesson-matters",
+    "title": "Dimensionality Reduction and Clustering",
+    "section": "",
+    "text": "PCA amplifies variance.\nFeature selection determines which variance is amplified.\nHighly variable genes shape downstream embeddings.",
+    "crumbs": [
+      "Structure and Clustering",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#interpretation",
+    "href": "04-dimensionality-reduction-and-clustering.html#interpretation",
+    "title": "Dimensionality Reduction and Clustering",
+    "section": "Interpretation",
+    "text": "Interpretation\nIf percent_mt aligns with PC1 or PC2:\n\nMitochondrial-associated genes influenced the selected variance.\nTechnical variation contributes to visible structure.\n\nStructure is diagnostic, not automatically biological.",
+    "crumbs": [
+      "Structure and Clustering",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#interpretation-1",
+    "href": "04-dimensionality-reduction-and-clustering.html#interpretation-1",
+    "title": "Dimensionality Reduction and Clustering",
+    "section": "Interpretation",
+    "text": "Interpretation\nIf batch drives separation:\n\nBatch influences variable genes, or\n\nTrue biology differs between batches.\n\nStructure alone cannot resolve this.",
+    "crumbs": [
+      "Structure and Clustering",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#what-clusters-represent",
+    "href": "04-dimensionality-reduction-and-clustering.html#what-clusters-represent",
+    "title": "Dimensionality Reduction and Clustering",
+    "section": "What Clusters Represent",
+    "text": "What Clusters Represent\nClusters represent cells similar in selected variance space.\nThey are the compression of selected variance, not biological labels.",
+    "crumbs": [
+      "Structure and Clustering",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "04-dimensionality-reduction-and-clustering.html#interpretation-2",
+    "href": "04-dimensionality-reduction-and-clustering.html#interpretation-2",
+    "title": "Dimensionality Reduction and Clustering",
+    "section": "Interpretation",
+    "text": "Interpretation\nIf one cluster has elevated mitochondrial percentage:\n\nStructure is partially technical.\nMarker interpretation must be calibrated.\nBiological claims must be constrained.\n\nStructure is variance geometry.\nMeaning requires calibration.",
+    "crumbs": [
+      "Structure and Clustering",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Dimensionality Reduction and Clustering</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html",
+    "href": "05-marker-genes-and-annotation.html",
+    "title": "Marker Genes and Variance-Driven Separation",
+    "section": "",
+    "text": "Why This Lesson Matters\nIn Lesson 4, we saw that:\nMarker analysis now asks:\nWhich genes are responsible for the separation we observe?\nMarkers do not create clusters.\nThey explain the variance that created them.",
+    "crumbs": [
+      "Interpretation & Biological Claims",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Marker Genes and Variance-Driven Separation</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#why-this-lesson-matters",
+    "href": "05-marker-genes-and-annotation.html#why-this-lesson-matters",
+    "title": "Marker Genes and Variance-Driven Separation",
+    "section": "",
+    "text": "PCA amplifies selected variance.\nClusters reflect compressed variance space.\nStructure emerges from highly variable genes.",
+    "crumbs": [
+      "Interpretation & Biological Claims",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Marker Genes and Variance-Driven Separation</span>"
+    ]
+  },
+  {
+    "objectID": "05-marker-genes-and-annotation.html#interpretation",
+    "href": "05-marker-genes-and-annotation.html#interpretation",
+    "title": "Marker Genes and Variance-Driven Separation",
+    "section": "Interpretation",
+    "text": "Interpretation\nThis plot reflects the same variance logic from Lesson 3 and 4.\nLarge absolute logFC values indicate genes contributing strongly to cluster separation.\nHigh -log10(padj) values indicate statistical stability.\nWhen effect size and significance align, separation is structurally coherent.\nIf clusters were formed by selected variance, markers must align with that same variance structure.\nMarker analysis does not discover new structure.\nIt quantifies existing variance compression.",
+    "crumbs": [
+      "Interpretation & Biological Claims",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Marker Genes and Variance-Driven Separation</span>"
+    ]
+  },
+  {
+    "objectID": "06-from-clusters-to-calibrated-biological-claims.html",
+    "href": "06-from-clusters-to-calibrated-biological-claims.html",
+    "title": "From Clusters to Calibrated Biological Claims",
+    "section": "",
+    "text": "Why This Lesson Matters\nAcross this free track, we have moved from raw counts to clusters and marker genes.\nNow we formalize the reasoning discipline that connects them.\nClusters exist because selected variance was compressed into principal components.\nMarker genes are the genes that dominate that compressed variance.\nBiological claims must be constrained by that logic.",
+    "crumbs": [
+      "Interpretation & Biological Claims",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>From Clusters to Calibrated Biological Claims</span>"
+    ]
+  }
+]
